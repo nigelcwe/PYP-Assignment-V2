@@ -106,14 +106,14 @@ def _menuInput(menu):
             elif menu == "registration_2":
                 print(_menus(1.2))
             elif menu == "exit":
-                print(menu5)
+                print(_menus(5))
             #continue for as many pages as needed
 
     return(inp)
 
 
 def _newRec(file, list):
-    string = separator.join(str(i) for i in list)
+    string = _constantVar(1).join(str(i) for i in list)
     with open(file, "a") as openedFile:
         openedFile.write(string)
         openedFile.write("\n")
