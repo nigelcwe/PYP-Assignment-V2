@@ -119,6 +119,42 @@ def _newRec(file, list):
         openedFile.write("\n")
 
 
+def _pwValidation(pw):
+    pwInvalidChars = ["\\", "#"]
+    pwValidation = 0
+    for i in pw:
+        for j in pwInvalidChars:
+            if i == j:
+                print("Invalid password! Please try again.")
+                pwValidation = 1
+                break
+        if pwValidation == 1:
+            break
+
+    if pwValidation == 0:
+        pwLetter = 0
+        pwNumber = 0
+        for i in pw:
+            try:
+                i = int(i)
+                pwNumber = 1
+            except:
+                pwLetter = 1
+        if pwLetter == 0 or pwNumber == 0:
+            print("Password must contain both letters and numbers!")
+            pwValidation = 1
+
+    if len(pw) == 0 and pwValidation == 0:
+        print("Please enter a password!")
+        pwValidation = 1
+
+    if len(pw) > 30 and pwValidation == 0:
+        print("Password is too long! Please try again.")
+        pwValidation = 1
+
+    return pwValidation
+
+
 def _pageLanding():
     list1 = []
     print(_menus(0))
@@ -139,7 +175,6 @@ def _pageLanding():
 def _pageRegistration():
     list1 = []
     aliasInvalidChars = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "=", "+", "\\", "|", "[", "]", "{", "}", "/", "?", "`", "~", ";", ":", "'", '"', ",", ".", "<", ">"]
-    pwInvalidChars = ["\\", "#"]
     while 1 == 1:
         _screenClr()
 
@@ -247,36 +282,7 @@ def _pageRegistration():
                 password = input(_menus(1.3))
 
 ##----------Validation of user's password
-                for i in password:
-                    for j in pwInvalidChars:
-                        if i == j:
-                            print("Invalid password! Please try again.")
-                            pwValidation = 1
-                            break
-                    if pwValidation == 1:
-                        break
-
-                if pwValidation == 0:
-                    pwLetter = 0
-                    pwNumber = 0
-                    for i in password:
-                        try:
-                            i = int(i)
-                            pwNumber = 1
-                        except:
-                            pwLetter = 1
-                    if pwLetter == 0 or pwNumber == 0:
-                        print("Password must contain both letters and numbers!")
-                        pwValidation = 1
-
-                if len(password) == 0 and pwValidation == 0:
-                    print("Please enter a password!")
-                    pwValidation = 1
-
-                if len(password) > 30 and pwValidation == 0:
-                    print("Password is too long! Please try again.")
-                    pwValidation = 1
-
+                pwValidation = _pwValidation(password)
                 if pwValidation == 1:
                     _loader(3)
                     continue
@@ -360,7 +366,7 @@ def _pageLogin():
                     break
                 break
 
-##----------Receiving input (password)
+##--Receiving input (password)
     attempt = 0
     if uIndex != -1:
         while 1 == 1:
@@ -368,7 +374,7 @@ def _pageLogin():
             attempt = attempt + 1
             password = str(input(_menus(2.2)))
 
-##--------------Exception in case user inputs 1 or 2 (reserved for page navigation)
+##----------Exception in case user inputs 1 or 2 (reserved for page navigation)
             try:
                 password = int(password)
                 if password == 1:
@@ -382,8 +388,16 @@ def _pageLogin():
                     _loader(3)
                     continue
 
-##--------------Assumed that user intends to enter a password (doesnt require validity check as validity check is already performed when registering a new account)
+##----------Assumed that user intends to enter a password
             except:
+
+##--------------Validating password
+                pwValidation = _pwValidation(password)
+                if pwValidation == 1:
+                    _loader(3)
+                    continue
+
+##--------------Checking if password matches
                 if password == userData.split(_constantVar(1))[1]:
                     pgNum = 3
                     uStatus = 1
