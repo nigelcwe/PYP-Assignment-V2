@@ -61,12 +61,14 @@ def _menus(num):
             menu = "=- Login -=\nLogin as:\n1 - User\n2 - Admin\n\nMore options:\n3 - Back\n"
 
         # Member Dashboard Menus (member browsing page)
-        elif num == 3.1:
+        elif num == 3.0:
             menu = "=- Member Dashboard -=\nWhat would you like to do?\n1 - Browse cars\n2 - View account details\n3 - Log out\n4 - Exit\n"
 
         # Admin Dashboard Menus (admin browsing page)
         elif num == 4.0:
             menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Add a car\n2 - Modify car details\n3 - View records (Cars or Payments)\n4 - Search specific records\n5 - Return a car\n6 - Log out\n7 - Exit\n"
+        elif num == 4.1:
+            menu = "Is the above data correct?\n1 - yes\n2 - No\n\nPlease enter a corresponding value:\n> "
 
         # Exit Page Menus
         elif num == 5.0:
@@ -116,6 +118,10 @@ def _constantVar(num):
     elif num == 3:
         var = "-"
 
+    # Input Separator
+    elif num == 4:
+        var = ";"
+
     return var
 
 
@@ -138,7 +144,9 @@ def _menuInput(menu):
             elif menu == "login_1":
                 print(_menus(2.4))
             elif menu == "userDash_1":
-                print(_menus(3.1))
+                print(_menus(3.0))
+            elif menu == "adminDash_1":
+                print(_menus(4.0))
             elif menu == "exit":
                 print(_menus(5))
     # Continue for as many pages as needed
@@ -151,6 +159,82 @@ def _newRec(file, list):
     with open(file, "a") as openedFile:
         openedFile.write(string)
         openedFile.write("\n")
+
+
+def _addCar():
+    carData = []
+    confirmation = 0
+    while 1 == 1:
+        _screenClr()
+        carInp = input("=- Car Addition -=\nPlease enter car details in the following format:\n\nID;Model;Type;Status;Rate\n(For status: available - 0, booked - 1)\n\n> ")
+        carData = carInp.split(_constantVar(4))
+        _loader(3)
+        _screenClr()
+        while 1 == 1:
+            carTemp = "ID: " + carData[0] + "\nModel: " + carData[1] + "\nType: " + carData[2] + "\nStatus: " + carData[3] + "\nRate: " + carData[4]
+            print("=- Car Addition -=\n" + carTemp + "\n")
+            try:
+                confirmation = input(_menus(4.1))
+                confirmation = int(confirmation)
+                if confirmation == 1 or confirmation == 2:
+                    break
+                elif confirmation != 2:
+                    print(_menus("badInput"))
+                    _loader(3)
+                    _screenClr()
+                    continue
+            except:
+                print(_menus("badInput"))
+                _loader(3)
+                _screenClr()
+                continue
+
+        if confirmation == 2:
+            continue
+        else:
+            inval = 0
+
+            # Checking for proper syntax of car ID
+            if inval == 0 and carData[0].startswith("CA") == False:
+                print("Invalid car ID detected! Please try agaain.")
+                inval = 1
+
+            if inval == 0:
+                try:
+                    IDNum = int(carData[0][2::])
+                except:
+                    print("Invalid car ID detected! Please try agin.")
+                    inval = 1
+
+
+            # Checking length of car ID
+            if inval == 0 and len(carData[0]) != 6:
+                print("Invalid car ID detected! Please try again")
+                inval = 1
+
+            # Checking for repeating car ID
+            if inval == 0:
+                with open(_fileSelect(4), "r") as openedFile:
+                    for lines in openedFile:
+                        existingRec = lines.rstrip("\n")
+                        if carData[0] == existingRec.split(_constantVar(1))[0]:
+                            print("Repeating car ID detected! Please try again.")
+                            inval = 1
+                            break
+
+            if inval == 1:
+                _sleep(0.5)
+                _loader(5)
+                continue
+            else:
+                break
+
+    _newRec(_fileSelect(4), carData)
+    _screenClr()
+    print("Car has been successfully added!\nNow redirecting back to Admin Dashboard.")
+    _sleep(0.5)
+    _loader(5)
+
 
 
 def _pwValidation(pw):
@@ -293,8 +377,11 @@ def _login(userType):
                         uStatus = 1
                     elif userType == 2:
                         uStatus = 2
+                    _loader(3)
+                    _screenClr()
                     print(_menus(2.3))
-                    _loader(10)
+                    _sleep(0.5)
+                    _loader(5)
                     break
 
                 # To limit the amount of attempts users have
@@ -313,64 +400,6 @@ def _login(userType):
     list1.append(uStatus)
     list1.append(uAlias)
     return list1
-
-
-def _memberBrowse(uAlias):
-    pgNum = 0
-    list1 = []
-    oList = []
-    uData = ""
-    uDetails = ""
-    print(_menus(3.1))
-
-    # Page navigation stuff
-    while 1 == 1:
-        uInput = _menuInput("userDash_1")
-        if uInput == 1:
-            _loader(3)
-            pgNum = 4
-            break
-        elif uInput == 2:
-            _loader(3)
-            break
-        elif uInput == 3:
-            _loader(3)
-            oList = _pageExit(1)
-            pgNum = oList[0]
-            break
-        elif uInput == 4:
-            _loader(3)
-            pgNum = 5
-            break
-        else:
-            print(_menus("badInput"))
-            _loader(3)
-            _screenClr()
-            print(_menus(3.1))
-
-    # Displaying Member Details
-    if uInput == 2:
-        while 1 == 1:
-            _screenClr()
-            with open(_fileSelect(1), "r") as openedFile:
-                for line in openedFile:
-                    uData = line.rstrip("\n")
-                    if uAlias == uData.split(_constantVar(1))[0]:
-                        tempAlias = uData.split(_constantVar(1))[0]
-                        if uData.split(_constantVar(1))[2] == "":
-                            tempCar = "Null"
-                        else:
-                            tempCar = uData.split(_constantVar(1))[2]
-                        uDetails = "=- User Details -=\nAlias: " + tempAlias + "\nRented Car: " + tempCar
-                        print(uDetails)
-                    else:
-                        continue
-
-
-# def _adminBrowse(uAlias):
-#     pgNum = 0
-#     list1 = []
-
 
 
 def _pageLanding():
@@ -549,7 +578,8 @@ def _pageRegistration():
             _screenClr()
             print(_menus(1.5))
             pgNum = 3
-            _loader(10)
+            _sleep(0.5)
+            _loader(5)
             list1.append(pgNum)
             return list1
         else:
@@ -604,11 +634,11 @@ def _pageBrowsing(uType, uAlias):
 
         # Go to member browsing page
         if uType == 1:
-            _memberBrowse(uAlias)
+            list1 = _memberBrowse(uAlias)
 
         # Go to admin browsing page
-        # if uType == 2:
-        #     list1 = _adminBrowse(uAlias)
+        elif uType == 2:
+            list1 = _adminBrowse(uAlias)
 
 
 def _pageExit(logout):
@@ -680,8 +710,6 @@ while 1 == 1:
         if pgNo != 0:
             userStatus = outputList[1]
             userAlias = outputList[2]
-            print(userStatus)
-            print(userAlias)
         continue
 
     # Page 4: Browsing Pages

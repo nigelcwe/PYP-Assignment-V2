@@ -1,0 +1,2 @@
+CA0001#Honda Civic#Sedan#0#100
+CA0002#Perodua Myvi#Compact#0#75
