@@ -51,6 +51,8 @@ def _menus(num):
             menu = "=- Login -=\nPlease enter your password:\nOther options:\n1 - Back\n2 - Exit\n\n> "
         elif num == 2.3:
             menu = "Successfully logged in!\nNow redirecting to main browsing page."
+        elif num == 2.4:
+            menu = "=- Login -=\nLogin as:\n1 - User\n2 - Admin\n\nMore options:\n3 - Back\n"
         elif num == 3.0:
             menu = "Hi"
         elif num == 4.0:
@@ -105,6 +107,8 @@ def _menuInput(menu):
                 print(_menus(1.1))
             elif menu == "registration_2":
                 print(_menus(1.2))
+            elif menu == "login_1":
+                print(_menus(2.4))
             elif menu == "exit":
                 print(_menus(5))
             #continue for as many pages as needed
@@ -153,6 +157,129 @@ def _pwValidation(pw):
         pwValidation = 1
 
     return pwValidation
+
+
+def _login(userType):
+    list1 = []
+    uStatus = 0
+    uIndex = -1
+    while 1 == 1:
+        _screenClr()
+
+##------Receiving input (alias)
+        try:
+            alias = input(_menus(2.1))
+            alias = int(alias)
+            if alias == 1:
+                _loader(3)
+                pgNum = 2
+                break
+            if alias == 2:
+                _loader(3)
+                pgNum = 5
+                break
+
+##------Assumed that an alias was entered
+        except:
+            alias = str(alias)
+
+##------Checking for Alias
+            if userType == 1:
+                with open(_fileSelect(1), "r") as openedFile:
+                    uIndex = -1
+                    lineNum = 0
+                    for line in openedFile:
+                        lineNum = lineNum + 1
+                        userData = line.rstrip()
+                        if alias == userData.split(_constantVar(1))[0]:
+                            _loader(3)
+                            uIndex = lineNum
+                            break
+                        else:
+                            continue
+
+            elif userType == 2:
+                with open(_fileSelect(3), "r") as openedFile:
+                    uIndex = -1
+                    lineNum = 0
+                    for line in openedFile:
+                        lineNum = lineNum + 1
+                        userData = line.rstrip()
+                        if alias == userData.split(_constantVar(1))[0]:
+                            _loader(3)
+                            uIndex = lineNum
+                            break
+                        else:
+                            continue
+
+##----------Alias not found
+            if uIndex == -1:
+                print("User not found! Please try again.")
+                _loader(3)
+                pgNum = 2
+                break
+            break
+
+##--Receiving input (password)
+    attempt = 0
+    if uIndex != -1:
+        while 1 == 1:
+            _screenClr()
+            attempt = attempt + 1
+            password = str(input(_menus(2.2)))
+
+##----------Exception in case user inputs 1 or 2 (reserved for page navigation)
+            try:
+                password = int(password)
+                if password == 1:
+                    _loader(3)
+                    pgNum = 2
+                    break
+                elif password == 2:
+                    _loader(3)
+                    pgNum = 5
+                    break
+                else:
+                    print(_menus("badInput"))
+                    _loader(3)
+                    continue
+
+##----------Assumed that user intends to enter a password
+            except:
+
+##--------------Validating password
+                pwValidation = _pwValidation(password)
+                if pwValidation == 1:
+                    _loader(3)
+                    continue
+
+##--------------Checking if password matches
+                if password == userData.split(_constantVar(1))[1]:
+                    pgNum = 3
+                    if userType == 1:
+                        uStatus = 1
+                    elif userType == 2:
+                        uStatus = 2
+                    print(_menus(2.3))
+                    _loader(10)
+                    break
+
+##------------------To limit the amount of attempts users have
+                elif attempt > 10:
+                    print("Too many failed attempts! Please enter your alias again.")
+                    _loader(10)
+                    pgNum = 2
+                    uStatus = 0
+                    break
+                else:
+                    print("Incorrect password! Please try again")
+                    _loader(3)
+
+##----------Preparing output of function
+    list1.append(pgNum)
+    list1.append(uStatus)
+    list1.append(uIndex)
+    return list1
 
 
 def _pageLanding():
@@ -228,6 +355,8 @@ def _pageRegistration():
                 aliasValidation = 1
 
 ##----------Checking availability of user's alias
+
+##----------Checking in user file
             if aliasValidation == 0:
                 with open(_fileSelect(1), "r") as openedFile:
                     for line in openedFile:
@@ -240,8 +369,22 @@ def _pageRegistration():
                         else:
                             continue
 
+##----------Checking in pending registration file
             if aliasValidation == 0:
                 with open(_fileSelect(2), "r") as openedFile:
+                    for line in openedFile:
+                        userData = line.rstrip()
+                        if alias == userData.split(_constantVar(1))[0]:
+                            print("Alias already exists! Please try again.")
+                            _loader(3)
+                            aliasValidation = 1
+                            break
+                        else:
+                            continue
+
+##----------Checking in admin file
+            if aliasValidation == 0:
+                with open(_fileSelect(3), "r") as openedFile:
                     for line in openedFile:
                         userData = line.rstrip()
                         if alias == userData.split(_constantVar(1))[0]:
@@ -322,104 +465,28 @@ def _pageRegistration():
 
 def _pageLogin():
     list1 = []
-    uStatus = 0
-    uIndex = -1
+    pgNum = 0
+    print(_menus(2.4))
     while 1 == 1:
-        _screenClr()
-
-##------Receiving user input (alias)
-        try:
-            alias = input(_menus(2.1))
-            alias = int(alias)
-            if alias == 1:
-                _loader(3)
-                pgNum = 0
-                break
-            if alias == 2:
-                _loader(3)
-                pgNum = 5
-                break
-
-##------Assumed that user has entered their alias
-        except:
-            alias = str(alias)
-
-##------Checking for user's alias
-            with open(_fileSelect(1), "r") as openedFile:
-                uIndex = -1
-                lineNum = 0
-                for line in openedFile:
-                    lineNum = lineNum + 1
-                    userData = line.rstrip()
-                    if alias == userData.split(_constantVar(1))[0]:
-                        _loader(3)
-                        uIndex = lineNum
-                        break
-                    else:
-                        continue
-
-##----------User's alias not found
-                if uIndex == -1:
-                    print("User not found! Please try again.")
-                    _loader(3)
-                    pgNum = 2
-                    break
-                break
-
-##--Receiving input (password)
-    attempt = 0
-    if uIndex != -1:
-        while 1 == 1:
+        uType = _menuInput("login_1")
+        if uType == 1:
+            _loader(3)
+            list1 = _login(uType)
+            break
+        elif uType == 2:
+            _loader(3)
+            list1 = _login(uType)
+            break
+        elif uType == 3:
+            _loader(3)
+            pgNum = 0
+            list1.append(pgNum)
+            break
+        else:
+            print(_menus("badInput"))
+            _loader(3)
             _screenClr()
-            attempt = attempt + 1
-            password = str(input(_menus(2.2)))
-
-##----------Exception in case user inputs 1 or 2 (reserved for page navigation)
-            try:
-                password = int(password)
-                if password == 1:
-                    pgNum = 0
-                    break
-                elif password == 2:
-                    pgNum = 5
-                    break
-                else:
-                    print(_menus("badInput"))
-                    _loader(3)
-                    continue
-
-##----------Assumed that user intends to enter a password
-            except:
-
-##--------------Validating password
-                pwValidation = _pwValidation(password)
-                if pwValidation == 1:
-                    _loader(3)
-                    continue
-
-##--------------Checking if password matches
-                if password == userData.split(_constantVar(1))[1]:
-                    pgNum = 3
-                    uStatus = 1
-                    print(_menus(2.3))
-                    _loader(10)
-                    break
-
-##------------------To limit the amount of attempts users have
-                elif attempt > 10:
-                    print("Too many failed attempts! Please enter your alias again.")
-                    _loader(10)
-                    pgNum = 2
-                    uStatus = 0
-                    break
-                else:
-                    print("Incorrect password! Please try again")
-                    _loader(3)
-
-##----------Preparing output of function
-    list1.append(pgNum)
-    list1.append(uStatus)
-    list1.append(uIndex)
+            print(_menus(2.4))
     return list1
 
 
@@ -480,10 +547,11 @@ while 1 == 1:
     elif pgNo == 2:
         outputList = _pageLogin()
         pgNo = outputList[0]
-        userStatus = outputList[1]
-        userIndex = outputList[2]
-        print(userStatus)
-        print(userIndex)
+        if pgNo != 0:
+            userStatus = outputList[1]
+            userIndex = outputList[2]
+            print(userStatus)
+            print(userIndex)
         continue
 
 #-------Page 4: Browsing Page
