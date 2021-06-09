@@ -1,11 +1,11 @@
 #NIGEL CHAN WEI EN
 #TP059179
 
-##----------------------------------------Modules
+# Modules
 from datetime import *
 
 
-##----------------------------------------Functions
+# Functions
 def _screenClr():
     print("\n" * 100)
 
@@ -33,8 +33,12 @@ def _loader(dots):
 def _menus(num):
     try:
         num = float(num)
+
+        # Landing Page Menus
         if num == 0.0:
             menu = "Welcome to SUPER CAR RENTAL SERVICES!\nWould you like to:\n1 - Register\n2 - Login\n3 - Browse as Guest\n4 - Login as Admin\n5 - Exit\n"
+
+        # Registration Page Menus
         elif num == 1.1:
             menu = "=- Registration -=\nPlease enter an alias: (5 to 20 characters)\nOther options:\n1 - Back\n2 - Exit\n\n> "
         elif num == 1.2:
@@ -45,6 +49,8 @@ def _menus(num):
             menu = "=- Registration -=\nPlease enter your password again.\n\n> "
         elif num == 1.5:
             menu = "=- Registration -=\nDear user, your application has been recorded and sent for Admin approval.\n\nNow proceeding to browse as guest."
+
+        # Login Page Menus
         elif num == 2.1:
             menu = "=- Login -=\nPlease enter your alias:\nOther options:\n1 - Back\n2 - Exit\n\n> "
         elif num == 2.2:
@@ -53,14 +59,24 @@ def _menus(num):
             menu = "Successfully logged in!\nNow redirecting to main browsing page."
         elif num == 2.4:
             menu = "=- Login -=\nLogin as:\n1 - User\n2 - Admin\n\nMore options:\n3 - Back\n"
-        elif num == 3.0:
-            menu = "Hi"
+
+        # Member Dashboard Menus (member browsing page)
+        elif num == 3.1:
+            menu = "=- Member Dashboard -=\nWhat would you like to do?\n1 - Browse cars\n2 - View account details\n3 - Log out\n4 - Exit\n"
+
+        # Admin Dashboard Menus (admin browsing page)
         elif num == 4.0:
-            menu = ""
+            menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Add a car\n2 - Modify car details\n3 - View records (Cars or Payments)\n4 - Search specific records\n5 - Return a car\n6 - Log out\n7 - Exit\n"
+
+        # Exit Page Menus
         elif num == 5.0:
             menu = "Are you sure you want to exit?\n1 - Yes\n2 - No\n"
+
+        # Main Car Page Menus
         elif num == 6.0:
             menu = ""
+
+    # Bad Input Menu
     except:
         num = str(num)
         if num == "badInput":
@@ -79,14 +95,26 @@ def _fileSelect(num):
     elif num == 4:
         fileName = "carList.txt"
     elif num == 5:
-        fileName = "counter.txt"
+        fileName = "paymentRecords.txt"
+    elif num == 6:
+        fileName = "bookingRecords.txt"
     return fileName
 
 
 def _constantVar(num):
     var = ""
+
+    # Layer 1 Separator
     if num == 1:
         var = "#"
+
+    # Layer 2 Separator
+    elif num == 2:
+        var = ":"
+
+    # Layer 3 Separator
+    elif num == 3:
+        var = "-"
 
     return var
 
@@ -109,9 +137,11 @@ def _menuInput(menu):
                 print(_menus(1.2))
             elif menu == "login_1":
                 print(_menus(2.4))
+            elif menu == "userDash_1":
+                print(_menus(3.1))
             elif menu == "exit":
                 print(_menus(5))
-            #continue for as many pages as needed
+    # Continue for as many pages as needed
 
     return(inp)
 
@@ -124,7 +154,7 @@ def _newRec(file, list):
 
 
 def _pwValidation(pw):
-    pwInvalidChars = ["\\", "#"]
+    pwInvalidChars = ["\\", "#", ":"]
     pwValidation = 0
     for i in pw:
         for j in pwInvalidChars:
@@ -161,12 +191,13 @@ def _pwValidation(pw):
 
 def _login(userType):
     list1 = []
+    uAlias = ""
     uStatus = 0
-    uIndex = -1
+    uFound = -1
     while 1 == 1:
         _screenClr()
 
-##------Receiving input (alias)
+        # Receiving Input (alias)
         try:
             alias = input(_menus(2.1))
             alias = int(alias)
@@ -179,56 +210,58 @@ def _login(userType):
                 pgNum = 5
                 break
 
-##------Assumed that an alias was entered
+        # Assume that an alias was entered
         except:
             alias = str(alias)
 
-##------Checking for Alias
+            # Checking for alias
             if userType == 1:
                 with open(_fileSelect(1), "r") as openedFile:
-                    uIndex = -1
+                    uFound = -1
                     lineNum = 0
                     for line in openedFile:
                         lineNum = lineNum + 1
                         userData = line.rstrip()
                         if alias == userData.split(_constantVar(1))[0]:
                             _loader(3)
-                            uIndex = lineNum
+                            uAlias = alias
+                            uFound = 1
                             break
                         else:
                             continue
 
             elif userType == 2:
                 with open(_fileSelect(3), "r") as openedFile:
-                    uIndex = -1
+                    uFound = -1
                     lineNum = 0
                     for line in openedFile:
                         lineNum = lineNum + 1
                         userData = line.rstrip()
                         if alias == userData.split(_constantVar(1))[0]:
                             _loader(3)
-                            uIndex = lineNum
+                            uAlias = alias
+                            uFound = 1
                             break
                         else:
                             continue
 
-##----------Alias not found
-            if uIndex == -1:
+            # Alias not found
+            if uFound == -1:
                 print("User not found! Please try again.")
                 _loader(3)
                 pgNum = 2
-                break
+                continue
             break
 
-##--Receiving input (password)
+    # Receiving Input (password)
     attempt = 0
-    if uIndex != -1:
+    if uFound != -1:
         while 1 == 1:
             _screenClr()
             attempt = attempt + 1
             password = str(input(_menus(2.2)))
 
-##----------Exception in case user inputs 1 or 2 (reserved for page navigation)
+            # Exception in case user inputs 1 or 2 (reserved for page navigation)
             try:
                 password = int(password)
                 if password == 1:
@@ -244,16 +277,16 @@ def _login(userType):
                     _loader(3)
                     continue
 
-##----------Assumed that user intends to enter a password
+            # Assume that user intends to input a password
             except:
 
-##--------------Validating password
+                # Password Validation
                 pwValidation = _pwValidation(password)
                 if pwValidation == 1:
                     _loader(3)
                     continue
 
-##--------------Checking if password matches
+                # Checking if password matches
                 if password == userData.split(_constantVar(1))[1]:
                     pgNum = 3
                     if userType == 1:
@@ -264,7 +297,7 @@ def _login(userType):
                     _loader(10)
                     break
 
-##------------------To limit the amount of attempts users have
+                # To limit the amount of attempts users have
                 elif attempt > 10:
                     print("Too many failed attempts! Please enter your alias again.")
                     _loader(10)
@@ -275,11 +308,69 @@ def _login(userType):
                     print("Incorrect password! Please try again")
                     _loader(3)
 
-##----------Preparing output of function
+    # Preparing output of function
     list1.append(pgNum)
     list1.append(uStatus)
-    list1.append(uIndex)
+    list1.append(uAlias)
     return list1
+
+
+def _memberBrowse(uAlias):
+    pgNum = 0
+    list1 = []
+    oList = []
+    uData = ""
+    uDetails = ""
+    print(_menus(3.1))
+
+    # Page navigation stuff
+    while 1 == 1:
+        uInput = _menuInput("userDash_1")
+        if uInput == 1:
+            _loader(3)
+            pgNum = 4
+            break
+        elif uInput == 2:
+            _loader(3)
+            break
+        elif uInput == 3:
+            _loader(3)
+            oList = _pageExit(1)
+            pgNum = oList[0]
+            break
+        elif uInput == 4:
+            _loader(3)
+            pgNum = 5
+            break
+        else:
+            print(_menus("badInput"))
+            _loader(3)
+            _screenClr()
+            print(_menus(3.1))
+
+    # Displaying Member Details
+    if uInput == 2:
+        while 1 == 1:
+            _screenClr()
+            with open(_fileSelect(1), "r") as openedFile:
+                for line in openedFile:
+                    uData = line.rstrip("\n")
+                    if uAlias == uData.split(_constantVar(1))[0]:
+                        tempAlias = uData.split(_constantVar(1))[0]
+                        if uData.split(_constantVar(1))[2] == "":
+                            tempCar = "Null"
+                        else:
+                            tempCar = uData.split(_constantVar(1))[2]
+                        uDetails = "=- User Details -=\nAlias: " + tempAlias + "\nRented Car: " + tempCar
+                        print(uDetails)
+                    else:
+                        continue
+
+
+# def _adminBrowse(uAlias):
+#     pgNum = 0
+#     list1 = []
+
 
 
 def _pageLanding():
@@ -305,7 +396,7 @@ def _pageRegistration():
     while 1 == 1:
         _screenClr()
 
-#-------Try+Except blocks to check if user has entered a string or an integer value. If string, assume user has entered their alias.
+        # Try+Except blocks to check if user has entered a string or an integer value. If string, assume user has entered their alias.
         try:
             alias = input(_menus(1.1))
             alias = int(alias)
@@ -323,11 +414,11 @@ def _pageRegistration():
                 _screenClr()
                 continue
 
-##------Assumed that user has entered an alias
+        # Assume that user has entered an alias
         except:
             alias = str(alias)
 
-##----------Validation of user's alias
+            # Validation of user's alias
             aliasValidation = 0
             for i in alias:
                 for j in aliasInvalidChars:
@@ -354,9 +445,9 @@ def _pageRegistration():
                 _loader(3)
                 aliasValidation = 1
 
-##----------Checking availability of user's alias
+# Checking availability of user's alias
 
-##----------Checking in user file
+            # Checking in user file
             if aliasValidation == 0:
                 with open(_fileSelect(1), "r") as openedFile:
                     for line in openedFile:
@@ -369,7 +460,7 @@ def _pageRegistration():
                         else:
                             continue
 
-##----------Checking in pending registration file
+            # Checking in pending registration file
             if aliasValidation == 0:
                 with open(_fileSelect(2), "r") as openedFile:
                     for line in openedFile:
@@ -382,7 +473,7 @@ def _pageRegistration():
                         else:
                             continue
 
-##----------Checking in admin file
+            # Checking in admin file
             if aliasValidation == 0:
                 with open(_fileSelect(3), "r") as openedFile:
                     for line in openedFile:
@@ -402,7 +493,7 @@ def _pageRegistration():
             list1.append(pgNum)
             return list1
 
-##--Asking user to confirm their desired alias
+        # Asking users to confirm their alias
         _loader(3)
         while 1 == 1:
             _screenClr()
@@ -417,25 +508,25 @@ def _pageRegistration():
                 _screenClr()
                 print(_menus(1.2))
 
-##--Prompting user to create a password
+        # Prompting users to create a password
         if aliasConfirm == 1:
             while 1 == 1:
                 pwValidation = 0
                 _screenClr()
                 password = input(_menus(1.3))
 
-##----------Validation of user's password
+                # Validation of user's password
                 pwValidation = _pwValidation(password)
                 if pwValidation == 1:
                     _loader(3)
                     continue
 
-##----------Prompting user to enter their password again as double confirmation
+                # Prompting user to enter their password again as double confirmation
                 _loader(3)
                 _screenClr()
                 passwordCheck = input(_menus(1.4))
 
-##----------Checking if 2nd password the user has entered matches their original/desired password
+                # Checking if 2nd password the user has entered matches their original/desired password
                 if passwordCheck != password or len(passwordCheck) != len(password):
                     print("Passwords do not match! Please try again.")
                     _loader(3)
@@ -444,15 +535,17 @@ def _pageRegistration():
                     _loader(3)
                     break
 
-##------Compiling user's data into a string as preparation to be written into registration text file for admin approval
+            # Compiling user's data into a string as preparation to be written into registration text file for admin approval
             userDataList = []
             userDataList.append(alias)
             userDataList.append(password)
+            userDataList.append("")
+            userDataList.append("")
 
-#-------Start writing user data into registration text file for admin approval
+            # Start writing user data into registration text file for admin approval
             _newRec(_fileSelect(2), userDataList)
 
-#-------Provide the user with feedback
+            # Provide the user with feedback
             _screenClr()
             print(_menus(1.5))
             pgNum = 3
@@ -467,21 +560,31 @@ def _pageLogin():
     list1 = []
     pgNum = 0
     print(_menus(2.4))
+
+    # Receive input (login as user/admin)
     while 1 == 1:
         uType = _menuInput("login_1")
+
+        # User Login
         if uType == 1:
             _loader(3)
             list1 = _login(uType)
             break
+
+        # Admin Login
         elif uType == 2:
             _loader(3)
             list1 = _login(uType)
             break
+
+        # Navigate to previous page
         elif uType == 3:
             _loader(3)
             pgNum = 0
             list1.append(pgNum)
             break
+
+        # Invalid input detection
         else:
             print(_menus("badInput"))
             _loader(3)
@@ -490,77 +593,109 @@ def _pageLogin():
     return list1
 
 
+def _pageBrowsing(uType, uAlias):
+    pgNum = 0
+    list1 = []
+    while 1 == 1:
+
+        # Go to guest car page
+        # if uType == 0:
 
 
-def _pageExit():
+        # Go to member browsing page
+        if uType == 1:
+            _memberBrowse(uAlias)
+
+        # Go to admin browsing page
+        # if uType == 2:
+        #     list1 = _adminBrowse(uAlias)
+
+
+def _pageExit(logout):
+    list1 = []
+    pgNum = 0
     print(_menus(5))
 
-##--Receiving input from the user (page selection)
+    # Receiving input from the user (page selection)
     while 1 == 1:
-        userExit = _menuInput("exit")
-        if userExit >= 1 and userExit <=2:
-            _loader(3)
+        if logout == 1:
+            userExit = 1
             break
         else:
-            print(_menus("badInput"))
-            _loader(3)
-            _screenClr()
-            print(_menus(5))
+            userExit = _menuInput("exit")
+            if userExit >= 1 and userExit <=2:
+                _loader(3)
+                break
+            else:
+                print(_menus("badInput"))
+                _loader(3)
+                _screenClr()
+                print(_menus(5))
 
-##--Executing user's seected option
+    # Executing user's selected option
     if userExit == 1:
         _screenClr()
         print("Thank you for using our services!")
+        pgNum = 0
 
-        ## Need to clear account login info
+        # Clearing account data
+        userStatus = 0
+        userAlias = ""
 
         _sleep(0.5)
         _loader(11)
         _sleep(0.5)
     else:
         pgNum = 0
-        return pgNum
+
+    list1.append(pgNum)
+    return list1
 
 
 
-##----------------------------------------Main Program
+# Main Program
 outputList = []
 pgNo = 0
-userStatus = 0 #0 - Guest, 1 - Member, 2 - Admin
-userIndex = -1
+userStatus = 0 # 0 - Guest, 1 - Member, 2 - Admin
+userAlias = ""
 while 1 == 1:
     _screenClr()
 
-##------Page 1: Landing Page
+    # Page 1: Landing Page
     if pgNo == 0:
         outputList = _pageLanding()
         pgNo = outputList[0]
         continue
 
-#-------Page 2: Registration Page
+    # Page 2: Registration Page
     elif pgNo == 1:
         outputList = _pageRegistration()
         pgNo = outputList[0]
         continue
 
-#-------Page 3: Login Page
+    # Page 3: Login Page
     elif pgNo == 2:
         outputList = _pageLogin()
         pgNo = outputList[0]
         if pgNo != 0:
             userStatus = outputList[1]
-            userIndex = outputList[2]
+            userAlias = outputList[2]
             print(userStatus)
-            print(userIndex)
+            print(userAlias)
         continue
 
-#-------Page 4: Browsing Page
+    # Page 4: Browsing Pages
     elif pgNo == 3:
-        print("Browsing Page")
+        outputList = _pageBrowsing(userStatus, userAlias)
 
-#-------Page 5: Exit Page
+    # Page 5: Car Pages
+    elif pgNo == 4:
+        print("Car Page")
+
+    # Page 6: Exit Page
     elif pgNo == 5:
-        pgNo = _pageExit()
+        outputList = _pageExit(0)
+        pgNo = outputList[0]
         if pgNo == 0:
             continue
 
