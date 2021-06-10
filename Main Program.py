@@ -36,7 +36,7 @@ def _menus(num):
 
         # Landing Page Menus
         if num == 0.0:
-            menu = "Welcome to SUPER CAR RENTAL SERVICES!\nWould you like to:\n1 - Register\n2 - Login\n3 - Browse as Guest\n4 - Login as Admin\n5 - Exit\n"
+            menu = "Welcome to SUPER CAR RENTAL SERVICES!\nWould you like to:\n1 - Register\n2 - Login\n3 - Browse as Guest\n4 - Exit\n"
 
         # Registration Page Menus
         elif num == 1.1:
@@ -69,6 +69,8 @@ def _menus(num):
             menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Add a car\n2 - Modify car details\n3 - View records (Cars or Payments)\n4 - Search specific records\n5 - Return a car\n6 - Log out\n7 - Exit\n"
         elif num == 4.1:
             menu = "Is the above data correct?\n1 - yes\n2 - No\n\nPlease enter a corresponding value:\n> "
+        elif num == 4.2:
+            menu == ""
 
         # Exit Page Menus
         elif num == 5.0:
@@ -76,7 +78,7 @@ def _menus(num):
 
         # Main Car Page Menus
         elif num == 6.0:
-            menu = ""
+            menu = "\nOther options:\n6 - Next Page\n7 - Previous Page\n8 - Back\n\nPlease enter a corresponding value:\n> "
 
     # Bad Input Menu
     except:
@@ -161,7 +163,57 @@ def _newRec(file, list):
         openedFile.write("\n")
 
 
-def _addCar():
+def _carScroll(uStatus):
+    carLine = ""
+    carData = []
+    counter = -1
+    fileList = []
+    pad = " "
+    list1 = []
+    endPage = 0
+    while 1 == 1:
+        if counter < -1:
+            counter = -1
+        _screenClr()
+        with open (_fileSelect(4), "r") as openedFile:
+            fileList = openedFile.readlines()
+            print("=- Cars List -=\n\tModel                 Type             Status           Rate             ID\n")
+            try:
+                for i in range(5):
+                    carLine = fileList[(counter + 1)].rstrip("\n")
+                    carData = carLine.split("#")
+                    if int(carData[3]) == 0:
+                        carData[3] = "Available"
+                    elif int(carData[3]) == 1:
+                        carData[3] = "Unavailable"
+                    print(str(i + 1) + " - " + (carData[1] + pad * (20 - len(carData[1]))) + ": " + (carData[2] + pad * (15 - len(carData[2]))) + ": " + (carData[3] + pad * (15 - len(carData[3]))) + ": " + (carData[4] + pad * (15 - len(carData[4]))) + ": " + (carData[0] + pad * (15 - len(carData[0]))))
+                    counter = counter + 1
+            except:
+                print("_______End of List_______")
+
+            if uStatus == 0:
+                try:
+                    uInp = input(_menus(6.0))
+                    _loader(3)
+                    uInp = int(uInp)
+                    if uInp == 6:
+                        continue
+                    elif uInp == 7:
+                        counter = counter - 10
+                        continue
+                    elif uInp == 8:
+                        pgNum = 0
+                        list1.append(pgNum)
+                        endPage = 1
+                        break
+                    elif uInp >= 1 or uInp <= 5:
+                        guestConfirm = input("")
+                except:
+                    print("gay")
+    return list1
+
+
+def _carAdd():
     carData = []
     confirmation = 0
     while 1 == 1:
@@ -169,8 +221,8 @@ def _addCar():
         carInp = input("=- Car Addition -=\nPlease enter car details in the following format:\n\nID;Model;Type;Status;Rate\n(For status: available - 0, booked - 1)\n\n> ")
         carData = carInp.split(_constantVar(4))
         _loader(3)
-        _screenClr()
         while 1 == 1:
+            _screenClr()
             carTemp = "ID: " + carData[0] + "\nModel: " + carData[1] + "\nType: " + carData[2] + "\nStatus: " + carData[3] + "\nRate: " + carData[4]
             print("=- Car Addition -=\n" + carTemp + "\n")
             try:
@@ -181,12 +233,10 @@ def _addCar():
                 elif confirmation != 2:
                     print(_menus("badInput"))
                     _loader(3)
-                    _screenClr()
                     continue
             except:
                 print(_menus("badInput"))
                 _loader(3)
-                _screenClr()
                 continue
 
         if confirmation == 2:
@@ -229,11 +279,15 @@ def _addCar():
             else:
                 break
 
+    # Writing car data into car file
     _newRec(_fileSelect(4), carData)
     _screenClr()
     print("Car has been successfully added!\nNow redirecting back to Admin Dashboard.")
     _sleep(0.5)
     _loader(5)
+
+
+# def _carEdit():
 
 
 
@@ -407,8 +461,16 @@ def _pageLanding():
     print(_menus(0))
     while 1 == 1:
         pgNum = _menuInput("landing")
-        if pgNum >= 1 and pgNum <= 5:
+        if pgNum >= 1 and pgNum <= 4:
             _loader(3)
+            if pgNum == 1:
+                pgNum = 1
+            elif pgNum == 2:
+                pgNum = 2
+            elif pgNum == 3:
+                pgNum = 4
+            elif pgNum == 4:
+                pgNum = 5
             break
         else:
             print(_menus("badInput"))
@@ -715,10 +777,13 @@ while 1 == 1:
     # Page 4: Browsing Pages
     elif pgNo == 3:
         outputList = _pageBrowsing(userStatus, userAlias)
+        continue
 
     # Page 5: Car Pages
     elif pgNo == 4:
-        print("Car Page")
+        outputList = _carScroll(userStatus)
+        pgNo = outputList[0]
+        continue
 
     # Page 6: Exit Page
     elif pgNo == 5:
