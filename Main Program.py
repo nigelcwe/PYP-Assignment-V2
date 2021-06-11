@@ -10,6 +10,9 @@ def _screenClr():
     print("\n" * 100)
 
 
+
+
+
 def _sleep(seconds):
     t1 = timedelta(seconds=seconds)
     t2 = datetime.now()
@@ -21,6 +24,9 @@ def _sleep(seconds):
             break
 
 
+
+
+
 def _loader(dots):
     while dots > 0:
         _sleep(0.33)
@@ -28,6 +34,9 @@ def _loader(dots):
         dots = dots - 1
     _sleep(0.33)
     print()
+
+
+
 
 
 def _menus(num):
@@ -66,11 +75,11 @@ def _menus(num):
 
         # Admin Dashboard Menus (admin browsing page)
         elif num == 4.0:
-            menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Add a car\n2 - Modify car details\n3 - View records (Cars or Payments)\n4 - Search specific records\n5 - Return a car\n6 - Log out\n7 - Exit\n"
+            menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Add a car\n2 - Modify car details\n3 - View records (Cars or Payments)\n4 - Search specific records (Bookings or Payments)\n5 - Return a car\n6 - Log out\n7 - Exit\n"
         elif num == 4.1:
             menu = "Is the above data correct?\n1 - yes\n2 - No\n\nPlease enter a corresponding value:\n> "
         elif num == 4.2:
-            menu == ""
+            menu = ""
 
         # Exit Page Menus
         elif num == 5.0:
@@ -79,6 +88,12 @@ def _menus(num):
         # Main Car Page Menus
         elif num == 6.0:
             menu = "\nOther options:\n6 - Next Page\n7 - Previous Page\n8 - Back\n\nPlease enter a corresponding value:\n> "
+        elif num == 6.1:
+            menu = "=- Car List -=\n1 - Login\n2 - Register\n3 - Continue browsing\n"
+
+        # Admin Car Page Menus
+        elif num == 7.0:
+            menu = "=- Edit Car Details -=\nPlease select details to be modified:\n1 - Car model\n2 - Car type\n3 - Car status\n4 - Rental rate\n5 - Back\n"
 
     # Bad Input Menu
     except:
@@ -86,6 +101,9 @@ def _menus(num):
         if num == "badInput":
             menu = "Invalid input! Please try again."
     return menu
+
+
+
 
 
 def _fileSelect(num):
@@ -103,6 +121,9 @@ def _fileSelect(num):
     elif num == 6:
         fileName = "bookingRecords.txt"
     return fileName
+
+
+
 
 
 def _constantVar(num):
@@ -127,6 +148,9 @@ def _constantVar(num):
     return var
 
 
+
+
+
 def _menuInput(menu):
     inp = 0
     while 1 == 1:
@@ -149,6 +173,10 @@ def _menuInput(menu):
                 print(_menus(3.0))
             elif menu == "adminDash_1":
                 print(_menus(4.0))
+            elif menu == "guestCar":
+                print(_menus(6.1))
+            elif menu == "carModify":
+                print(_menus(7.0))
             elif menu == "exit":
                 print(_menus(5))
     # Continue for as many pages as needed
@@ -156,22 +184,95 @@ def _menuInput(menu):
     return(inp)
 
 
+
+
+
 def _newRec(file, list):
     string = _constantVar(1).join(str(i) for i in list)
     with open(file, "a") as openedFile:
-        openedFile.write(string)
-        openedFile.write("\n")
+        openedFile.write(string + "\n")
 
 
-def _carScroll(uStatus):
-    carLine = ""
+
+
+
+def _carModify(carID):
+    carList = []
+    carListOld = []
+    carListNew = []
+    adminMod = ""
+    newList = []
+    newCar = ""
+    output = 0
+    while 1 == 1:
+        _screenClr()
+        print(_menus(7.0))
+        adminInp = _menuInput("carModify")
+        if (adminInp >= 1 and adminInp <= 5) == False:
+            print(_menus("badInput"))
+            _loader(3)
+            continue
+        _loader(3)
+        break
+
+    if adminInp != 5:
+        with open (_fileSelect(4), "r") as openedFile:
+            for line in openedFile:
+                carList = line.rstrip("\n").split(_constantVar(1))
+                if carID == carList[0]:
+                    _screenClr()
+                    adminMod = str(input("=- Edit Car Details -=\nCar to be edited: " + " # ".join(str(i) for i in carList) + "\n\nData to be edited: " + carList[adminInp] + "\n\nPlease enter the new data:\n\n> "))
+                    _loader(3)
+                    carListOld = carList[::]
+                    carListNew = carList[::]
+                    carListNew[adminInp] = adminMod
+                    newList.append(carListNew)
+                else:
+                    newList.append(carList)
+
+        while 1 == 1:
+            _screenClr()
+            try:
+                confirmation = int(input("=- Edit Car Details -=\nConfirm the following changes?\n\nOriginal: " + " # ".join(str(i) for i in carListOld) + "\nEdited  : " + " # ".join(str(i) for i in carListNew) + "\n\n1 - Yes\n2 - No\n\n> "))
+                if confirmation == 1 or confirmation == 2:
+                    break
+                else:
+                    print(_menus("badInput"))
+                    _loader(3)
+                    continue
+            except:
+                print(_menus("badInput"))
+                _loader(3)
+                continue
+
+        _loader(3)
+        if confirmation == 2:
+            output = 0
+            return output
+
+
+        with open (_fileSelect(4), "w") as openedFile:
+            for ind in range(len(newList)):
+                newCar = _constantVar(4).join(newList[ind])
+                openedFile.write(newCar + "\n")
+
+        output = 1
+        return output
+
+
+
+
+
+def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View cars available for rental, 1 = Modify, 2 = Return)
+    carLine = ""                                       #       Member (0 = Select car to book [only shows available cars])
     carData = []
     counter = -1
     fileList = []
     pad = " "
     list1 = []
-    endPage = 0
+    carID = ""
     while 1 == 1:
+        loadedCarID = []
         if counter < -1:
             counter = -1
         _screenClr()
@@ -182,50 +283,176 @@ def _carScroll(uStatus):
                 for i in range(5):
                     carLine = fileList[(counter + 1)].rstrip("\n")
                     carData = carLine.split("#")
+                    loadedCarID.append(carData[0])
                     if int(carData[3]) == 0:
                         carData[3] = "Available"
                     elif int(carData[3]) == 1:
                         carData[3] = "Unavailable"
+
+                    # For admins and members to view only cars that are available for rental
+                    if (uStatus == 2 or uStatus == 1) and mode == 0:
+                        if int(carData[3]) == 1:
+                            continue
+
                     print(str(i + 1) + " - " + (carData[1] + pad * (20 - len(carData[1]))) + ": " + (carData[2] + pad * (15 - len(carData[2]))) + ": " + (carData[3] + pad * (15 - len(carData[3]))) + ": " + (carData[4] + pad * (15 - len(carData[4]))) + ": " + (carData[0] + pad * (15 - len(carData[0]))))
                     counter = counter + 1
             except:
                 print("_______End of List_______")
 
-            if uStatus == 0:
-                try:
-                    uInp = input(_menus(6.0))
-                    _loader(3)
-                    uInp = int(uInp)
-                    if uInp == 6:
+        try:
+            uInp = input(_menus(6.0))
+            uInp = int(uInp)
+
+            # Storing selected car ID
+            if uStatus == 1 or uStatus == 2:
+                if uInp == 1:
+                    carID = loadedCarID[0]
+                elif uInp == 2:
+                    carID = loadedCarID[1]
+                elif uInp == 3:
+                    carID = loadedCarID[2]
+                elif uInp == 4:
+                    carID = loadedCarID[3]
+                elif uInp == 5:
+                    carID = loadedCarID[4]
+
+            _loader(3)
+
+            # Car Selection
+            if uInp >= 1 and uInp <= 5:
+
+                # Guest Mode
+                if uStatus == 0:
+                    guestInp = 0
+                    _screenClr()
+                    print(_menus(6.1))
+                    while 1 == 1:
+                        guestInp = _menuInput("guestCar")
+                        if guestInp == 1:
+                            pgNum = 2
+                            list1.append(pgNum)
+                            return list1
+                        elif guestInp == 2:
+                            pgNum = 1
+                            list1.append(pgNum)
+                            return list1
+                        elif guestInp == 3:
+                            break
+                        else:
+                            print(_menus("badInput"))
+                            _loader(3)
+                            continue
+                    if guestInp == 3:
+                        counter = counter - 5
+                        _loader(3)
                         continue
-                    elif uInp == 7:
-                        counter = counter - 10
-                        continue
-                    elif uInp == 8:
-                        pgNum = 0
-                        list1.append(pgNum)
-                        endPage = 1
+                    else:
                         break
-                    elif uInp >= 1 or uInp <= 5:
-                        guestConfirm = input("")
-                except:
-                    print("gay")
+
+                # Member Mode
+                # elif uStatus == 1:
+
+                # Admin Mode
+                elif uStatus == 2:
+
+                    # View cars available to be rented
+                    if mode == 0:
+                        print(_menus("badInput"))
+                        _loader(3)
+                        continue
+
+                    # Modify car details
+                    elif mode == 1:
+                        while 1 == 1:
+                            outputMod = _carModify(carID)
+                            _loader(3)
+                            if outputMod == 1:
+                                _screenClr()
+                                print("Car details have successfully updated!")
+                            # Ask user for input if they want to modify any more details for the same car ( yes - continue, no - break )
+
+                            elif outputMod == 0:
+                            # input for (Process was cancelled! Would you like to try again?)
+                            else:
+                                break
+                        continue
+
+            # Next Car Page
+            elif uInp == 6:
+                continue
+
+            # Previous Car Page
+            elif uInp == 7:
+                counter = counter - 10
+                continue
+
+            # Back to previous page (exit car page)
+            elif uInp == 8:
+                if uStatus == 0:
+                    pgNum = 0
+                    list1.append(pgNum)
+                    return list1
+                else:
+                    pgNum = 3
+                    list1.append(pgNum)
+                    return list1
+
+        except:
+            print(_menus("badInput"))
+            counter = -1
+            _loader(3)
+            continue
+
+    # if endPage != 1:
+
     return list1
 
 
+
+
+
 def _carAdd():
+    list1 = []
     carData = []
     confirmation = 0
+    pgNum = 0
     while 1 == 1:
         _screenClr()
-        carInp = input("=- Car Addition -=\nPlease enter car details in the following format:\n\nID;Model;Type;Status;Rate\n(For status: available - 0, booked - 1)\n\n> ")
-        carData = carInp.split(_constantVar(4))
+
+        # Receiving input (new car details)
+        carInp = input("=- Car Addition -=\nPlease enter car details in the following format:\n\nID;Model;Type;Status;Rate\n(For status: available - 0, booked - 1)\n\nOther options:\n1 - Back\n\n> ")
+        try:
+            carInp = int(carInp)
+            if carInp == 1:
+                pgNum = 3
+                list1.append(pgNum)
+                _loader(3)
+            else:
+                print(_menus("badInput"))
+                _loader(3)
+                continue
+        except:
+            carData = carInp.split(_constantVar(4))
+
+            # Validating that the user has entered the correct amount of fields
+            if len(carData) != 5:
+                print(_menus("badInput"))
+                _loader(3)
+                continue
+
+        if pgNum == 3:
+            return list1
+
         _loader(3)
         while 1 == 1:
             _screenClr()
+
+            # Displaying input details for user to double-check details
             carTemp = "ID: " + carData[0] + "\nModel: " + carData[1] + "\nType: " + carData[2] + "\nStatus: " + carData[3] + "\nRate: " + carData[4]
             print("=- Car Addition -=\n" + carTemp + "\n")
             try:
+
+                # Receiving input (confirmation of details to be added)
                 confirmation = input(_menus(4.1))
                 confirmation = int(confirmation)
                 if confirmation == 1 or confirmation == 2:
@@ -256,7 +483,6 @@ def _carAdd():
                     print("Invalid car ID detected! Please try agin.")
                     inval = 1
 
-
             # Checking length of car ID
             if inval == 0 and len(carData[0]) != 6:
                 print("Invalid car ID detected! Please try again")
@@ -281,13 +507,16 @@ def _carAdd():
 
     # Writing car data into car file
     _newRec(_fileSelect(4), carData)
+    _loader(3)
     _screenClr()
     print("Car has been successfully added!\nNow redirecting back to Admin Dashboard.")
     _sleep(0.5)
     _loader(5)
+    pgNum = 3
+    list1.append(pgNum)
+    return list1
 
 
-# def _carEdit():
 
 
 
@@ -325,6 +554,9 @@ def _pwValidation(pw):
         pwValidation = 1
 
     return pwValidation
+
+
+
 
 
 def _login(userType):
@@ -471,7 +703,8 @@ def _pageLanding():
                 pgNum = 4
             elif pgNum == 4:
                 pgNum = 5
-            break
+            list1.append(pgNum)
+            return list1
         else:
             print(_menus("badInput"))
             _loader(3)
@@ -494,11 +727,13 @@ def _pageRegistration():
             if alias == 1:
                 _loader(3)
                 pgNum = 0
-                break
+                list1.append(pgNum)
+                return list1
             elif alias == 2:
                 _loader(3)
                 pgNum = 5
-                break
+                list1.append(pgNum)
+                return list1
             else:
                 print("Alias does not contain a letter.")
                 _loader(3)
@@ -661,20 +896,22 @@ def _pageLogin():
         if uType == 1:
             _loader(3)
             list1 = _login(uType)
-            break
+            return list1
 
         # Admin Login
         elif uType == 2:
             _loader(3)
             list1 = _login(uType)
-            break
+            return list1
 
         # Navigate to previous page
         elif uType == 3:
             _loader(3)
             pgNum = 0
             list1.append(pgNum)
-            break
+            list1.append(0)
+            list1.append("")
+            return list1
 
         # Invalid input detection
         else:
@@ -682,7 +919,7 @@ def _pageLogin():
             _loader(3)
             _screenClr()
             print(_menus(2.4))
-    return list1
+
 
 
 def _pageBrowsing(uType, uAlias):
@@ -697,6 +934,7 @@ def _pageBrowsing(uType, uAlias):
         # Go to member browsing page
         if uType == 1:
             list1 = _memberBrowse(uAlias)
+            return list1
 
         # Go to admin browsing page
         elif uType == 2:
@@ -706,6 +944,8 @@ def _pageBrowsing(uType, uAlias):
 def _pageExit(logout):
     list1 = []
     pgNum = 0
+    uStatus = 0
+    uAlias = ""
     print(_menus(5))
 
     # Receiving input from the user (page selection)
@@ -714,6 +954,7 @@ def _pageExit(logout):
             userExit = 1
             break
         else:
+            _screenClr()
             userExit = _menuInput("exit")
             if userExit >= 1 and userExit <=2:
                 _loader(3)
@@ -731,8 +972,8 @@ def _pageExit(logout):
         pgNum = 0
 
         # Clearing account data
-        userStatus = 0
-        userAlias = ""
+        uStatus = 0
+        uAlias = ""
 
         _sleep(0.5)
         _loader(11)
@@ -741,6 +982,9 @@ def _pageExit(logout):
         pgNum = 0
 
     list1.append(pgNum)
+    list1.append(uStatus)
+    list1.append(uAlias)
+
     return list1
 
 
@@ -752,6 +996,8 @@ userStatus = 0 # 0 - Guest, 1 - Member, 2 - Admin
 userAlias = ""
 while 1 == 1:
     _screenClr()
+    if userStatus == 1 or userStatus == 2:
+        pgNo = 3
 
     # Page 1: Landing Page
     if pgNo == 0:
@@ -777,11 +1023,14 @@ while 1 == 1:
     # Page 4: Browsing Pages
     elif pgNo == 3:
         outputList = _pageBrowsing(userStatus, userAlias)
+        pgNo = outputList[0]
+        userStatus = outputList[1]
+        userAlias = outputList[2]
         continue
 
     # Page 5: Car Pages
     elif pgNo == 4:
-        outputList = _carScroll(userStatus)
+        outputList = _carSelect(userStatus, userAlias, 0)
         pgNo = outputList[0]
         continue
 
@@ -789,6 +1038,8 @@ while 1 == 1:
     elif pgNo == 5:
         outputList = _pageExit(0)
         pgNo = outputList[0]
+        userStatus = outputList[1]
+        userAlias = outputList[2]
         if pgNo == 0:
             continue
 
