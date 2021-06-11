@@ -371,7 +371,7 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                                 print("Car details have successfully updated!")
                             # Ask user for input if they want to modify any more details for the same car ( yes - continue, no - break )
 
-                            elif outputMod == 0:
+                            # elif outputMod == 0:
                             # input for (Process was cancelled! Would you like to try again?)
                             else:
                                 break
