@@ -296,16 +296,18 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                 for i in range(5):
                     carLine = fileList[(counter + 1)].rstrip("\n")
                     carData = carLine.split("#")
+
+                    # For admins and members to view only cars that are available for rental
+                    if (uStatus == 2 or uStatus == 1) and mode == 0:
+                        if int(carData[3]) == 1:
+                            continue
+
                     loadedCarID.append(carData[0])
                     if int(carData[3]) == 0:
                         carData[3] = "Available"
                     elif int(carData[3]) == 1:
                         carData[3] = "Unavailable"
 
-                    # For admins and members to view only cars that are available for rental
-                    if (uStatus == 2 or uStatus == 1) and mode == 0:
-                        if int(carData[3]) == 1:
-                            continue
 
                     print(str(i + 1) + " - " + (carData[1] + pad * (20 - len(carData[1]))) + ": " + (carData[2] + pad * (15 - len(carData[2]))) + ": " + (carData[3] + pad * (15 - len(carData[3]))) + ": " + (carData[4] + pad * (15 - len(carData[4]))) + ": " + (carData[0] + pad * (15 - len(carData[0]))))
                     counter = counter + 1
@@ -537,6 +539,7 @@ def _carAdd():
                 confirmation = input(_menus(4.1))
                 confirmation = int(confirmation)
                 if confirmation == 1 or confirmation == 2:
+                    _loader(3)
                     break
                 elif confirmation != 2:
                     print(_menus("badInput"))
@@ -767,6 +770,82 @@ def _login(userType):
     list1.append(uStatus)
     list1.append(uAlias)
     return list1
+
+
+def _memberBrowse(uAlias):
+    pgNum = 0
+    list1 = []
+    oList = []
+    uData = ""
+    uDetails = ""
+    print(_menus(3.1))
+
+    # Page navigation stuff
+    while 1 == 1:
+        uInput = _menuInput("userDash_1")
+        if uInput == 1:
+            _loader(3)
+            pgNum = 4
+            break
+        elif uInput == 2:
+            _loader(3)
+            break
+        elif uInput == 3:
+            _loader(3)
+            oList = _pageExit(1)
+            pgNum = oList[0]
+            break
+        elif uInput == 4:
+            _loader(3)
+            pgNum = 5
+            break
+        else:
+            print(_menus("badInput"))
+            _loader(3)
+            _screenClr()
+            print(_menus(3.1))
+
+    # Displaying Member Details
+    if uInput == 2:
+        while 1 == 1:
+            _screenClr()
+            with open(_fileSelect(1), "r") as openedFile:
+                for line in openedFile:
+                    uData = line.rstrip("\n")
+                    if uAlias == uData.split(_constantVar(1))[0]:
+                        tempAlias = uData.split(_constantVar(1))[0]
+                        if uData.split(_constantVar(1))[2] == "":
+                            tempCar = "Null"
+                        else:
+                            tempCar = uData.split(_constantVar(1))[2]
+                        uDetails = "=- User Details -=\nAlias: " + tempAlias + "\nRented Car: " + tempCar
+                        print(uDetails)
+                    else:
+                        continue
+
+
+def _adminBrowse(uAlias):
+    pgNum = 0
+    list1 = []
+    while 1 == 1:
+        _screenClr()
+        print(_menus(4.0))
+        uInput = _menuInput("adminDash_1")
+        if uInput == 1:
+            _loader(3)
+            list1 = _carAdd()
+            continue
+        elif uInput == 2:
+            _loader(3)
+            list1 = _carSelect(2, uAlias, 1)
+            _loader(3)
+            continue
+        elif uInput == 5:
+            _loader(3)
+            list1 = _carSelect(2, uAlias, 2)
+            _loader(3)
+            continue
+
 
 
 def _pageLanding():
@@ -1020,6 +1099,7 @@ def _pageBrowsing(uType, uAlias):
         # Go to admin browsing page
         elif uType == 2:
             list1 = _adminBrowse(uAlias)
+            return list1
 
 
 def _pageExit(logout):
