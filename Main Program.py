@@ -246,7 +246,7 @@ def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return ca
         while 1 == 1:
             _screenClr()
             try:
-                confirmation = int(input("=- Edit Car Details -=\nConfirm the following changes?\n\nOriginal: " + " # ".join(str(i) for i in carListOld) + "\nEdited  : " + " # ".join(str(i) for i in carListNew) + "\n\n1 - Yes\n2 - No\n\n> "))
+                confirmation = int(input("=- Edit Car Details -=\nConfirm the following changes?\n\nOriginal: " + " # ".join(str(i) for i in carListOld) + "\nEdited  : " + " # ".join(str(i) for i in carListNew) + "\n\n1 - Yes\n2 - No\n\nPlease enter a corresponding value:\n> "))
                 if confirmation == 1 or confirmation == 2:
                     break
                 else:
@@ -510,6 +510,7 @@ def _carAdd():
                 pgNum = 3
                 list1.append(pgNum)
                 _loader(3)
+                return list1
             else:
                 print(_menus("badInput"))
                 _loader(3)
@@ -522,9 +523,6 @@ def _carAdd():
                 print(_menus("badInput"))
                 _loader(3)
                 continue
-
-        if pgNum == 3:
-            return list1
 
         _loader(3)
         while 1 == 1:
@@ -838,12 +836,10 @@ def _adminBrowse(uAlias):
         elif uInput == 2:
             _loader(3)
             list1 = _carSelect(2, uAlias, 1)
-            _loader(3)
             continue
         elif uInput == 5:
             _loader(3)
             list1 = _carSelect(2, uAlias, 2)
-            _loader(3)
             continue
 
 

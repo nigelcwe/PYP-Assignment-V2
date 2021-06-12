@@ -1,7 +1,7 @@
-CA0001#Honda Civic#Sedan#1#100
+CA0001#Honda Civic#Sedan#0#100
 CA0002#Perodua Myvi#Compact#0#75
 CA0003#Volkswagen Passat#Sedan#0#200
-CA0004#Honda Accord#Sedan#1#160
+CA0004#Honda Accord#Sedan#0#160
 CA0005#BMW 5Series#Sedan#0#200
 CA0006#Toyota Vios#Sedan#0#100
 CA0007#Proton Persona#Sedan#0#85
