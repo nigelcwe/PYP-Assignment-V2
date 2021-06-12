@@ -75,11 +75,19 @@ def _menus(num):
 
         # Admin Dashboard Menus (admin browsing page)
         elif num == 4.0:
-            menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Add a car\n2 - Modify car details\n3 - View records (Cars or Payments)\n4 - Search specific records (Bookings or Payments)\n5 - Return a car\n6 - Log out\n7 - Exit\n"
+            menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Add a car\n2 - Modify car details\n3 - View records (Cars or Payments)\n4 - Search specific records (Bookings or Payments)\n5 - Return a car\n6 - Confirm registrations\n7 - Log out\n8 - Exit\n"
         elif num == 4.1:
             menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - View car records\n2 - View payment records\n3 - Back\n"
         elif num == 4.2:
             menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Seach for specific bookings\n2 - Search for specific payments\n3 - Back\n"
+
+        # Registration Confirm Menus
+        elif num == 4.3:
+            menu = "\nOther options:\n6 - Next Page\n7 - Previous Page\n8 - Back\n\nPlease enter a corresponding value:\n> "
+        elif num == 4.4:
+            menu = "=- Confirm Registration -=\nPlease select an option:\n1 - Confirm another user\n2 - Back\n"
+        elif num == 4.5:
+            menu = "=- Confirm Registration -=\nPlease select an option:\n1 - Try again\n2 - Confirm another user\n3 - Back\n"
 
         # Exit Page Menus
         elif num == 5.0:
@@ -197,6 +205,10 @@ def _menuInput(menu):
                 print(_menus(7.3))
             elif menu == "carReturn_2":
                 print(_menus(7.4))
+            elif menu == "regConfirm_1":
+                print(_menus(4.4))
+            elif menu == "regConfirm_2":
+                print(_menus(4.5))
             elif menu == "exit":
                 print(_menus(5))
     # Continue for as many pages as needed
@@ -211,6 +223,175 @@ def _newRec(file, list):
     string = _constantVar(1).join(str(i) for i in list)
     with open(file, "a") as openedFile:
         openedFile.write(string + "\n")
+
+
+
+
+
+def _regSelect():
+    list1 = []
+    pgNum = 0
+    counter = -1
+    pad = " "
+    uLine = ""
+    uData = []
+    uDataTemp = []
+    fileList = []
+    i = 0
+    newList = []
+    uInp = 0
+    uInp2 = 0
+    while 1 == 1:
+        i = 0
+        loadedUserAlias = []
+        if counter < -1:
+            counter = -1
+        _screenClr()
+        with open(_fileSelect(2), "r") as openedFile:
+            fileList = openedFile.readlines()
+            print("=- Registration List -=\n\tAlias                 Password\n")
+            try:
+                while i < 5:
+                    uLine = fileList[(counter + 1)].rstrip("\n")
+                    uData = uLine.split(_constantVar(1))
+                    loadedUserAlias.append(uData[0])
+                    print(str(i + 1) + " - " + (uData[0] + pad * (20 - len(uData[0]))) + ": " + (uData[1] + pad * (30 - len(uData[1]))))
+                    counter = counter + 1
+                    i = i + 1
+            except:
+                print("_______End of List_______")
+
+        try:
+            uInp = input(_menus(4.3))
+            uInp = int(uInp)
+
+                # Storing loaded user Alias
+            if uInp == 1:
+                uAlias = loadedUserAlias[0]
+            elif uInp == 2:
+                uAlias = loadedUserAlias[1]
+            elif uInp == 3:
+                uAlias = loadedUserAlias[2]
+            elif uInp == 4:
+                uAlias = loadedUserAlias[3]
+            elif uInp == 5:
+                uAlias = loadedUserAlias[4]
+
+
+            if uInp >= 1 and uInp <= 5:
+                _loader(3)
+                while 1 == 1:
+                    _screenClr()
+                    try:
+                        confirmation = int(input("=- Confirm Registration -=\nUser to be confirmed: " + uAlias + "\n\nConfirm user?\n1 - Yes\n2 - No\n\nPlease enter a corresponding value:\n> "))
+
+                        if confirmation == 1:
+                            with open(_fileSelect(2), "r") as openedFile:
+
+                                # Excluding user from original registration file and saving user data
+                                for line in openedFile:
+                                    uData = line.rstrip("\n").split(_constantVar(1))
+                                    if uAlias == uData[0]:
+                                        uDataTemp = uData[::]
+                                        continue
+                                    else:
+                                        newList.append(uData)
+
+                            # Writing new list to registration file
+                            with open(_fileSelect(2), "w") as openedFile:
+                                for ind in range(len(newList)):
+                                    uLine = _constantVar(1).join(newList[ind])
+                                    openedFile.write(uLine + "\n")
+
+                            # Appending user data into member file
+                            _newRec(_fileSelect(1), uData)
+
+                            _loader(3)
+                            _screenClr()
+                            print("User has been registered successfully!")
+                            _loader(3)
+                            while 1 == 1:
+                                _screenClr()
+                                print(_menus(4.4))
+                                uInp2 = _menuInput("regConfirm_1")
+                                if uInp2 == 1:
+                                    counter = -1
+                                    _loader(3)
+                                    break
+                                elif uInp == 2:
+                                    _loader(3)
+                                    pgNum = 3
+                                    list1.append(pgNum)
+                                    return list1
+                                else:
+                                    print(_menus("badInput"))
+                                    _loader(3)
+                                    continue
+                            break
+
+                        # Process Terminated
+                        elif confirmation == 2:
+                            _loader(3)
+                            _screenClr()
+                            print("Process was terminated!")
+                            _loader(3)
+                            while 1 == 1:
+                                _screenClr()
+                                print(_menus(4.5))
+                                uInp2 = _menuInput("regConfirm_2")
+                                if uInp2 == 1:
+                                    _loader(3)
+                                    break
+                                elif uInp2 == 2:
+                                    _loader(3)
+                                    counter = -1
+                                    break
+                                elif uInp2 == 3:
+                                    _loader(3)
+                                    pgNum = 3
+                                    list1.append(pgNum)
+                                    return list1
+                                else:
+                                    print(_menus("badInput"))
+                                    _loader(3)
+                                    continue
+                            if uInp2 == 1:
+                                continue
+                            break
+
+                    except:
+                        print(_menus("badInput"))
+                        _loader(3)
+                        continue
+
+            # Next Page
+            elif uInp == 6:
+                _loader(3)
+                continue
+
+            # Previous Page
+            elif uInp == 7:
+                counter = counter - 10
+                _loader(3)
+                continue
+
+            # Back to previous menu
+            elif uInp == 8:
+                _loader(3)
+                pgNum = 3
+                list1.append(pgNum)
+                return list1
+
+            else:
+                print(_menus("badInput"))
+                _loader(3)
+                continue
+
+        except:
+            print(_menus("badInput"))
+            counter = -1
+            _loader(3)
+            continue
 
 
 
@@ -299,7 +480,6 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
     pad = " "
     list1 = []
     carID = ""
-    counterP = 0
     i = 0
     while 1 == 1:
         i = 0
@@ -941,14 +1121,19 @@ def _adminBrowse(uAlias):
             list1 = _carSelect(2, uAlias, 2)
             continue
 
-        # Logout
+        # Admin Functionality: Confirm Registration
         elif uInput == 6:
+            _loader(3)
+            list1 = _regSelect()
+
+        # Logout
+        elif uInput == 7:
             _loader(3)
             list1 = _pageExit(1)
             return list1
 
         # Exit
-        elif uInput == 7:
+        elif uInput == 8:
             _loader(3)
             list1 = _pageExit(0)
             return list1
