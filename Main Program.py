@@ -94,6 +94,10 @@ def _menus(num):
         # Admin Car Page Menus
         elif num == 7.0:
             menu = "=- Edit Car Details -=\nPlease select details to be modified:\n1 - Car model\n2 - Car type\n3 - Car status\n4 - Rental rate\n5 - Back\n"
+        elif num == 7.1:
+            menu = "=- Edit Car Details -=\nPlease select an option:\n1 - Continue editing details of selected car\n2 - Choose another car to edit\n3 - Back to Admin Dashboard\n"
+        elif num == 7.2:
+            menu = "=- Edit Car Details -=\nPlease select an option:\n1 - Try again\n2 - Choose another car to edit\n3 - Back to Admin Dashboard\n"
 
     # Bad Input Menu
     except:
@@ -177,6 +181,10 @@ def _menuInput(menu):
                 print(_menus(6.1))
             elif menu == "carModify":
                 print(_menus(7.0))
+            elif menu == "carModify_1":
+                print(_menus(7.1))
+            elif menu == "carModify_2":
+                print(_menus(7.2))
             elif menu == "exit":
                 print(_menus(5))
     # Continue for as many pages as needed
@@ -196,7 +204,8 @@ def _newRec(file, list):
 
 
 
-def _carModify(carID):
+def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return car)
+    adminInp = 0
     carList = []
     carListOld = []
     carListNew = []
@@ -204,16 +213,20 @@ def _carModify(carID):
     newList = []
     newCar = ""
     output = 0
-    while 1 == 1:
-        _screenClr()
-        print(_menus(7.0))
-        adminInp = _menuInput("carModify")
-        if (adminInp >= 1 and adminInp <= 5) == False:
-            print(_menus("badInput"))
+
+    if mode == 0:
+        while 1 == 1:
+            _screenClr()
+            print(_menus(7.0))
+            adminInp = _menuInput("carModify")
+            if (adminInp >= 1 and adminInp <= 5) == False:
+                print(_menus("badInput"))
+                _loader(3)
+                continue
             _loader(3)
-            continue
-        _loader(3)
-        break
+            break
+    else:
+        adminInp = 3
 
     if adminInp != 5:
         with open (_fileSelect(4), "r") as openedFile:
@@ -221,7 +234,7 @@ def _carModify(carID):
                 carList = line.rstrip("\n").split(_constantVar(1))
                 if carID == carList[0]:
                     _screenClr()
-                    adminMod = str(input("=- Edit Car Details -=\nCar to be edited: " + " # ".join(str(i) for i in carList) + "\n\nData to be edited: " + carList[adminInp] + "\n\nPlease enter the new data:\n\n> "))
+                    adminMod = str(input("=- Edit Car Details -=\nCar to be edited: " + " # ".join(str(i) for i in carList) + "\n\nData to be edited: " + carList[adminInp] + "\n\nPlease enter the new data:\n> "))
                     _loader(3)
                     carListOld = carList[::]
                     carListNew = carList[::]
@@ -253,7 +266,7 @@ def _carModify(carID):
 
         with open (_fileSelect(4), "w") as openedFile:
             for ind in range(len(newList)):
-                newCar = _constantVar(4).join(newList[ind])
+                newCar = _constantVar(1).join(newList[ind])
                 openedFile.write(newCar + "\n")
 
         output = 1
@@ -331,16 +344,20 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                         if guestInp == 1:
                             pgNum = 2
                             list1.append(pgNum)
+                            _loader(3)
                             return list1
                         elif guestInp == 2:
                             pgNum = 1
                             list1.append(pgNum)
+                            _loader(3)
                             return list1
                         elif guestInp == 3:
                             break
                         else:
                             print(_menus("badInput"))
                             _loader(3)
+                            _screenClr()
+                            print(_menus(6.1))
                             continue
                     if guestInp == 3:
                         counter = counter - 5
@@ -364,18 +381,82 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                     # Modify car details
                     elif mode == 1:
                         while 1 == 1:
-                            outputMod = _carModify(carID)
-                            _loader(3)
+                            adminSelect1 = 0
+                            adminSelect2 = 0
+                            outputMod = _carModify(carID, 0)
+
+                            # Successfully updated car details
                             if outputMod == 1:
                                 _screenClr()
                                 print("Car details have successfully updated!")
-                            # Ask user for input if they want to modify any more details for the same car ( yes - continue, no - break )
+                                _sleep(0.5)
+                                _loader(3)
+                                while 1 == 1:
+                                    _screenClr()
+                                    print(_menus(7.1))
+                                    adminSelect1 = _menuInput("carModify_1")
+                                    if adminSelect1 == 1:
+                                        _loader(3)
+                                        break
+                                    elif adminSelect1 == 2:
+                                        counter = -1
+                                        _loader(3)
+                                        break
+                                    elif adminSelect1 == 3:
+                                        _loader(3)
+                                        pgNum = 3
+                                        list1.append(pgNum)
+                                        return list1
+                                    else:
+                                        print(_menus("badInput"))
+                                        _loader(3)
+                                        continue
+                                if adminSelect1 == 1:
+                                    continue
+                                else:
+                                    break
 
-                            # elif outputMod == 0:
-                            # input for (Process was cancelled! Would you like to try again?)
-                            else:
-                                break
+                            # Data modification terminated
+                            elif outputMod == 0:
+                                _screenClr()
+                                print("Editing process was terminated!")
+                                _sleep(0.5)
+                                _loader(3)
+                                while 1 == 1:
+                                    _screenClr()
+                                    print(_menus(7.2))
+                                    adminSelect2 = _menuInput("carModify_2")
+                                    if adminSelect2 == 1:
+                                        _loader(3)
+                                        break
+                                    elif adminSelect2 == 2:
+                                        counter = -1
+                                        _loader(3)
+                                        break
+                                    elif adminSelect2 == 3:
+                                        _loader(3)
+                                        pgNum = 3
+                                        list1.append(pgNum)
+                                        return list1
+                                    else:
+                                        print(_menus("badInput"))
+                                        _loader(3)
+                                        continue
+                                if adminSelect2 == 1:
+                                    continue
+                                else:
+                                    break
+
+                            break
                         continue
+
+                    # Car Return Functionality
+                    elif mode == 2:
+                        adminSelect1 = 0
+                        adminSelect2 = 0
+                        outputMod = _carModify(carID, 1)
+
+
 
             # Next Car Page
             elif uInp == 6:
