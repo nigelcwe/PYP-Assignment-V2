@@ -98,6 +98,10 @@ def _menus(num):
             menu = "=- Edit Car Details -=\nPlease select an option:\n1 - Continue editing details of selected car\n2 - Choose another car to edit\n3 - Back to Admin Dashboard\n"
         elif num == 7.2:
             menu = "=- Edit Car Details -=\nPlease select an option:\n1 - Try again\n2 - Choose another car to edit\n3 - Back to Admin Dashboard\n"
+        elif num == 7.3:
+            menu = "=- Car Return -=\nPlease select an option:\n1 - Return another car\n2 - Back to Admin Dashboard\n"
+        elif num == 7.4:
+            menu = "=- Car Return -=\nPlease select an option:\n1 - Try again\n2 - Return another car\n3 - Back to Admin Dashboard\n"
 
     # Bad Input Menu
     except:
@@ -185,6 +189,10 @@ def _menuInput(menu):
                 print(_menus(7.1))
             elif menu == "carModify_2":
                 print(_menus(7.2))
+            elif menu == "carReturn_1":
+                print(_menus(7.3))
+            elif menu == "carReturn_2":
+                print(_menus(7.4))
             elif menu == "exit":
                 print(_menus(5))
     # Continue for as many pages as needed
@@ -234,8 +242,11 @@ def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return ca
                 carList = line.rstrip("\n").split(_constantVar(1))
                 if carID == carList[0]:
                     _screenClr()
-                    adminMod = str(input("=- Edit Car Details -=\nCar to be edited: " + " # ".join(str(i) for i in carList) + "\n\nData to be edited: " + carList[adminInp] + "\n\nPlease enter the new data:\n> "))
-                    _loader(3)
+                    if mode == 1:
+                        adminMod = "1"
+                    else:
+                        adminMod = str(input("=- Edit Car Details -=\nCar to be edited: " + " # ".join(str(i) for i in carList) + "\n\nData to be edited: " + carList[adminInp] + "\n\nPlease enter the new data:\n> "))
+                        _loader(3)
                     carListOld = carList[::]
                     carListNew = carList[::]
                     carListNew[adminInp] = adminMod
@@ -384,81 +395,97 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                     elif mode == 1:
                         while 1 == 1:
                             adminSelect1 = 0
-                            adminSelect2 = 0
                             outputMod = _carModify(carID, 0)
 
-                            # Successfully updated car details
+                            _screenClr()
                             if outputMod == 1:
-                                _screenClr()
                                 print("Car details have successfully updated!")
-                                _sleep(0.5)
-                                _loader(3)
-                                while 1 == 1:
-                                    _screenClr()
+                            else:
+                                print("Process was terminated!")
+                            _sleep(0.5)
+                            _loader(3)
+                            while 1 == 1:
+                                _screenClr()
+                                if outputMod == 1:
                                     print(_menus(7.1))
                                     adminSelect1 = _menuInput("carModify_1")
-                                    if adminSelect1 == 1:
-                                        _loader(3)
-                                        break
-                                    elif adminSelect1 == 2:
-                                        counter = -1
-                                        _loader(3)
-                                        break
-                                    elif adminSelect1 == 3:
-                                        _loader(3)
-                                        pgNum = 3
-                                        list1.append(pgNum)
-                                        return list1
-                                    else:
-                                        print(_menus("badInput"))
-                                        _loader(3)
-                                        continue
-                                if adminSelect1 == 1:
-                                    continue
                                 else:
-                                    break
-
-                            # Data modification terminated
-                            elif outputMod == 0:
-                                _screenClr()
-                                print("Editing process was terminated!")
-                                _sleep(0.5)
-                                _loader(3)
-                                while 1 == 1:
-                                    _screenClr()
                                     print(_menus(7.2))
-                                    adminSelect2 = _menuInput("carModify_2")
-                                    if adminSelect2 == 1:
-                                        _loader(3)
-                                        break
-                                    elif adminSelect2 == 2:
-                                        counter = -1
-                                        _loader(3)
-                                        break
-                                    elif adminSelect2 == 3:
-                                        _loader(3)
-                                        pgNum = 3
-                                        list1.append(pgNum)
-                                        return list1
-                                    else:
-                                        print(_menus("badInput"))
-                                        _loader(3)
-                                        continue
-                                if adminSelect2 == 1:
-                                    continue
-                                else:
+                                    adminSelect1 = _menuInput("carModify_2")
+                                if adminSelect1 == 1:
+                                    _loader(3)
                                     break
-
-                            break
+                                elif adminSelect1 == 2:
+                                    counter = -1
+                                    _loader(3)
+                                    break
+                                elif adminSelect1 == 3:
+                                    _loader(3)
+                                    pgNum = 3
+                                    list1.append(pgNum)
+                                    return list1
+                                else:
+                                    print(_menus("badInput"))
+                                    _loader(3)
+                                    continue
+                            if adminSelect1 == 1:
+                                continue
+                            else:
+                                break
                         continue
 
                     # Car Return Functionality
                     elif mode == 2:
-                        adminSelect1 = 0
-                        adminSelect2 = 0
-                        outputMod = _carModify(carID, 1)
+                        while 1 == 1:
+                            adminSelect2 = 0
+                            outputMod = _carModify(carID, 1)
 
+                            _screenClr()
+                            if outputMod == 1:
+                                print("Car details have successfully updated!")
+                            else:
+                                print("Process was terminated!")
+                            _sleep(0.5)
+                            _loader(3)
+                            while 1 == 1:
+                                _screenClr()
+                                if outputMod == 1:
+                                    print(_menus(7.3))
+                                    adminSelect2 = _menuInput("carReturn_1")
+                                    if adminSelect2 == 1:
+                                        counter = -1
+                                        _loader(3)
+                                        break
+                                    elif adminSelect2 == 2:
+                                        _loader(3)
+                                        pgNum = 3
+                                        list1.append(pgNum)
+                                        return list1
+                                    else:
+                                        print(_menus("badInput"))
+                                        _loader(3)
+                                        continue
+                                else:
+                                    print(_menus(7.4))
+                                    adminSelect2 = _menuInput("carReturn_2")
+                                    if adminSelect2 == 1:
+                                        _loader(3)
+                                        break
+                                    if adminSelect2 == 2:
+                                        counter = -1
+                                        _loader(3)
+                                        break
+                                    else:
+                                        print(_menus("badInput"))
+                                        _loader(3)
+                                        continue
 
+                            if adminSelect2 == 1 and outputMod == 0:
+                                continue
+
+                            else:
+                                break
+                        continue
 
             # Next Car Page
             elif uInp == 6:
