@@ -111,6 +111,9 @@ def _menus(num):
         elif num == 7.4:
             menu = "=- Car Return -=\nPlease select an option:\n1 - Try again\n2 - Return another car\n3 - Back to Admin Dashboard\n"
 
+        elif num == 8.0:
+            menu = "=- "
+
     # Bad Input Menu
     except:
         num = str(num)
@@ -472,6 +475,57 @@ def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return ca
 
 
 
+# def _carBooking(uAlias, carID):
+#     pgNum = 0
+#     list1 = []
+#     _screenClr()
+#     carData = []
+#     carDataTemp = []
+#     carDataNew = []
+#     uData = []
+#     uDataTemp = []
+#     uDataNew = []
+#     confirmation = 0
+#     dayNum = 0
+#     with open(_fileSelect(4), "r") as openedFile:
+#         for line in openedFile:
+#             carData = line.rstrip("\n").split(_constantVar(1))
+#             if carID == carData[0]:
+#                 break
+#
+#     with open(_fileSelect(1), "r") as openedFile:
+#         for line in openedFile:
+#             uData = line.rstrip("\n").split(_constantVar(1))
+#             if uAlias == uData[0]:
+#                 break
+#
+#     while 1 == 1:
+#         try:
+#             confirmation = int(input("=- Car Booking -=\nBook the following car?\nID             : " + carData[0] + "\nModel          : " + carData[1] + "\nType           : " + carData[2] + "\nRate(per day)  : RM " + carData[4] + "\n\n1 - Yes\n2 - No (Back to browsing page)\n\nPlease enter a corresponding value:\n> "))
+#             if confirmation == 1:
+#                 _loader(3)
+#                 while 1 == 1:
+#                     dayNum =
+#
+#             elif confirmation == 2:
+#                 _loader(3)
+#                 pgNum = 3
+#                 list1.append(pgNum)
+#                 return list1
+#
+#             else:
+#                 print(_menus("badInput"))
+#                 _loader(3)
+#                 continue
+#
+#         except:
+#             print(_menus("badInput"))
+#             _loader(3)
+#             continue
+
+
+
+
 def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View cars available for rental, 1 = Modify, 2 = Return)
     carLine = ""                                       #       Member (0 = Select car to book [only shows available cars])
     carData = []
@@ -489,7 +543,7 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
         _screenClr()
         with open (_fileSelect(4), "r") as openedFile:
             fileList = openedFile.readlines()
-            print("=- Cars List -=\n\tModel                 Type             Status           Rate             ID\n")
+            print("=- Cars List -=\n\tModel                 Type             Status           Rate(per day)    ID\n")
             try:
                 while i < 5 :
                     carLine = fileList[(counter + 1)].rstrip("\n")
@@ -507,7 +561,7 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                     elif int(carData[3]) == 1:
                         carData[3] = "Unavailable"
 
-                    print(str(i + 1) + " - " + (carData[1] + pad * (20 - len(carData[1]))) + ": " + (carData[2] + pad * (15 - len(carData[2]))) + ": " + (carData[3] + pad * (15 - len(carData[3]))) + ": " + (carData[4] + pad * (15 - len(carData[4]))) + ": " + (carData[0] + pad * (15 - len(carData[0]))))
+                    print(str(i + 1) + " - " + (carData[1] + pad * (20 - len(carData[1]))) + ": " + (carData[2] + pad * (15 - len(carData[2]))) + ": " + (carData[3] + pad * (15 - len(carData[3]))) + ": RM " + (carData[4] + pad * (13 - len(carData[4]))) + ": " + (carData[0] + pad * (15 - len(carData[0]))))
                     counter = counter + 1
                     i = i + 1
             except:
@@ -566,7 +620,10 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                         break
 
                 # Member Mode
-                # elif uStatus == 1:
+                elif uStatus == 1:
+                    _loader(3)
+                    while 1 == 1:
+                        outputBook = _carBooking(uAlias, carID)
 
                 # Admin Mode
                 elif uStatus == 2:
