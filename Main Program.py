@@ -71,7 +71,7 @@ def _menus(num):
 
         # Member Dashboard Menus (member browsing page)
         elif num == 3.0:
-            menu = "=- Member Dashboard -=\nWhat would you like to do?\n1 - Browse cars\n2 - View account details\n3 - Log out\n4 - Exit\n"
+            menu = "=- Member Dashboard -=\nWhat would you like to do?\n1 - Browse cars\n2 - View rental history\n3 - Log out\n4 - Exit\n"
 
         # Admin Dashboard Menus (admin browsing page)
         elif num == 4.0:
