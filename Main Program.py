@@ -111,8 +111,11 @@ def _menus(num):
         elif num == 7.4:
             menu = "=- Car Return -=\nPlease select an option:\n1 - Try again\n2 - Return another car\n3 - Back to Admin Dashboard\n"
 
+        # Member Car Page Menus
         elif num == 8.0:
-            menu = "=- "
+            menu = "=- Car Booking -=\n\nPlease enter the number of days you wish to rent the car for:\n> "
+        elif num == 8.1:
+            menu = "=- Car Booking -=\nPlease select an option:\n1 - Try again\n2 - Choose another car to edit\n3 - Back to Member Dashboard\n"
 
     # Bad Input Menu
     except:
@@ -154,11 +157,11 @@ def _constantVar(num):
 
     # Layer 2 Separator
     elif num == 2:
-        var = ":"
+        var = "|"
 
     # Layer 3 Separator
     elif num == 3:
-        var = "-"
+        var = "."
 
     # Input Separator
     elif num == 4:
@@ -212,6 +215,8 @@ def _menuInput(menu):
                 print(_menus(4.4))
             elif menu == "regConfirm_2":
                 print(_menus(4.5))
+            elif menu == "carBook_1":
+                print(_menus(8.1))
             elif menu == "exit":
                 print(_menus(5))
     # Continue for as many pages as needed
@@ -527,53 +532,168 @@ def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return ca
 
 
 
-# def _carBooking(uAlias, carID):
-#     pgNum = 0
-#     list1 = []
-#     _screenClr()
-#     carData = []
-#     carDataTemp = []
-#     carDataNew = []
-#     uData = []
-#     uDataTemp = []
-#     uDataNew = []
-#     confirmation = 0
-#     dayNum = 0
-#     with open(_fileSelect(4), "r") as openedFile:
-#         for line in openedFile:
-#             carData = line.rstrip("\n").split(_constantVar(1))
-#             if carID == carData[0]:
-#                 break
-#
-#     with open(_fileSelect(1), "r") as openedFile:
-#         for line in openedFile:
-#             uData = line.rstrip("\n").split(_constantVar(1))
-#             if uAlias == uData[0]:
-#                 break
-#
-#     while 1 == 1:
-#         try:
-#             confirmation = int(input("=- Car Booking -=\nBook the following car?\nID             : " + carData[0] + "\nModel          : " + carData[1] + "\nType           : " + carData[2] + "\nRate(per day)  : RM " + carData[4] + "\n\n1 - Yes\n2 - No (Back to browsing page)\n\nPlease enter a corresponding value:\n> "))
-#             if confirmation == 1:
-#                 _loader(3)
-#                 while 1 == 1:
-#                     dayNum =
-#
-#             elif confirmation == 2:
-#                 _loader(3)
-#                 pgNum = 3
-#                 list1.append(pgNum)
-#                 return list1
-#
-#             else:
-#                 print(_menus("badInput"))
-#                 _loader(3)
-#                 continue
-#
-#         except:
-#             print(_menus("badInput"))
-#             _loader(3)
-#             continue
+def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = Process terminated, 3 = User already booked a car
+    pgNum = 0
+    list1 = []
+    uListNew = []
+    carListNew = []
+    _screenClr()
+    carData = []
+    carDataNew = []
+    uData = []
+    uDataNew = []
+    paymentData = []
+    bookingData = []
+    rentalHistory = ""
+    rentalHistory1 = ""
+    rentalHistory1List = []
+    paymentDateTime = ""
+    paymentTimeData = []
+    confirmation = 0
+    dayNum = 0
+    amtDue = 0
+    with open(_fileSelect(4), "r") as openedFile:
+        for line in openedFile:
+            carData = line.rstrip("\n").split(_constantVar(1))
+            if carID == carData[0]:
+                break
+
+    with open(_fileSelect(1), "r") as openedFile:
+        for line in openedFile:
+            uData = line.rstrip("\n").split(_constantVar(1))
+            if uAlias == uData[0]:
+                rentalHistory1List = uData[3].split(_constantVar(2))
+                break
+
+    while 1 == 1:
+        try:
+            _screenClr()
+            if uData[2] != "":
+                output = 3
+                return output
+
+            dayNum = int(input(_menus(8.0)))
+            _loader(3)
+            _screenClr()
+            confirmation = int(input("=- Car Booking -=\nBook the following car?\nID             : " + str(carData[0]) + "\nModel          : " + str(carData[1]) + "\nType           : " + str(carData[2]) + "\nRate(per day)  : RM " + str(carData[4]) + "\nDays           : " + str(dayNum) + "\n\n1 - Yes\n2 - No (Back to browsing page)\n\nPlease enter a corresponding value:\n> "))
+            if confirmation == 1:
+                _loader(3)
+                while 1 == 1:
+                    _screenClr()
+                    try:
+                        amtDue = int(carData[4]) * int(dayNum)
+                        amtPayment = int(input("=- Car Booking -=\nAmount due: RM " + str(amtDue) + "\n\nPlease enter payment amount:\n> RM "))
+                        difference = amtPayment - amtDue
+                        if difference > 0:
+                            print("Payment amount is greater than amount due! Please try again.")
+                            _loader(3)
+                            continue
+                        elif difference < 0:
+                            print("Payment amount is less than amount due! Please try again.")
+                            _loader(3)
+                            continue
+                        _loader(3)
+                        _screenClr()
+                        print("Payment accepted!")
+
+                        # Preparing Payment Time Data List
+                        paymentDateTime = str(datetime.now())
+                        paymentTimeData.append(paymentDateTime.split(" ")[0])
+                        paymentTimeData.append(paymentDateTime.split(" ")[1])
+
+                        # Preparing Rental History String
+                        rentalHistory = _constantVar(3).join(carData)
+                        if rentalHistory1List[0] == "":
+                            rentalHistory1List[0] = rentalHistory
+                        else:
+                            rentalHistory1List.append(rentalHistory)
+                        rentalHistory1 = _constantVar(2).join(rentalHistory1List)
+
+                        # Preparing User Data List
+                        uDataNew = uData[::]
+                        uDataNew[2] = carData[0][::]
+                        uDataNew[3] = rentalHistory1
+
+                        # Preparing Car Data List
+                        carDataNew = carData[::]
+                        carDataNew[3] = "1"
+
+                        # Preparing Booking Data List
+                        bookingData.append(uData[0][::])
+                        bookingData.append(_constantVar(2).join(carDataNew))
+                        bookingData.append(_constantVar(2).join(paymentTimeData))
+                        bookingData.append(dayNum)
+
+                        # Preparing Payment Data List
+                        paymentData.append(uData[0][::])
+                        paymentData.append(amtPayment)
+                        paymentData.append(_constantVar(2).join(paymentTimeData))
+
+                        # Updating User File
+                        with open(_fileSelect(1), "r") as openedFile:
+                            uListNew = []
+                            for line in openedFile:
+                                uData = line.rstrip("\n").split(_constantVar(1))
+                                if uAlias == uData[0]:
+                                    uListNew.append(uDataNew)
+                                else:
+                                    uListNew.append(uData)
+
+                        with open(_fileSelect(1), "w") as openedFile:
+                            for ind in range(len(uListNew)):
+                                uNew = _constantVar(1).join(uListNew[ind])
+                                openedFile.write(uNew + "\n")
+
+                        # Updating Car File
+                        with open(_fileSelect(4), "r") as openedFile:
+                            carListNew = []
+                            for line in openedFile:
+                                carData = line.rstrip("\n").split(_constantVar(1))
+                                if carID == carData[0]:
+                                    carListNew.append(carDataNew)
+                                else:
+                                    carListNew.append(carData)
+
+                        with open(_fileSelect(4), "w") as openedFile:
+                            for ind in range(len(carListNew)):
+                                carNew = _constantVar(1).join(carListNew[ind])
+                                openedFile.write(carNew + "\n")
+
+                        # Adding new record to payment file
+                        _newRec(_fileSelect(5), paymentData)
+
+                        # Adding new record to booking file
+                        _newRec(_fileSelect(6), bookingData)
+
+                        _loader(3)
+                        output = 1
+                        _screenClr()
+                        print("Successfully booked car: " + carDataNew[1] + " (ID: " + carDataNew[0] + ")")
+                        _sleep(0.5)
+                        _loader(5)
+                        return output
+
+
+
+                    except:
+                        print(_menus("badInput"))
+                        _loader(3)
+                        continue
+
+            elif confirmation == 2:
+                _loader(3)
+                output = 2
+                return output
+
+            else:
+                print(_menus("badInput"))
+                _loader(3)
+                continue
+
+        except:
+            print(_menus("badInput"))
+            _loader(3)
+            continue
 
 
 
@@ -586,6 +706,7 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
     fileList = []
     pad = " "
     list1 = []
+    pgNum = 0
     carID = ""
     i = 0
     while 1 == 1:
@@ -677,6 +798,47 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                     _loader(3)
                     while 1 == 1:
                         outputBook = _carBooking(uAlias, carID)
+                        if outputBook == 1:
+                            pgNum = 3
+                            list1.append(pgNum)
+                            return list1
+                        elif outputBook == 2:
+                            _screenClr()
+                            print("Process was terminated!")
+
+                        elif outputBook == 3:
+                            _screenClr()
+                            print("Error: User is currently renting a car.")
+                            _loader(3)
+                            pgNum = 3
+                            list1.append(pgNum)
+                            return list1
+
+                        _sleep(0.5)
+                        _loader(5)
+                        while 1 == 1:
+                            memInp = 0
+                            _screenClr()
+                            print(_menus(8.1))
+                            memInp = _menuInput("carBook_1")
+                            if memInp == 1:
+                                _loader(3)
+                                break
+                            elif memInp == 2:
+                                _loader(3)
+                                counter = -1
+                                break
+                            elif memInp == 3:
+                                _loader(3)
+                                pgNum = 3
+                                list1.append(pgNum)
+                                return list1
+
+                        if memInp == 1:
+                            continue
+                        else:
+                            break
+                    continue
 
                 # Admin Mode
                 elif uStatus == 2:
@@ -823,8 +985,6 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
             _loader(3)
             continue
 
-    # if endPage != 1:
-
     return list1
 
 
@@ -940,7 +1100,7 @@ def _carAdd():
 
 
 def _pwValidation(pw):
-    pwInvalidChars = ["\\", "#", ":"]
+    pwInvalidChars = ["\\", "#", "|", ".", ";"]
     pwValidation = 0
     for i in pw:
         for j in pwInvalidChars:
@@ -1113,27 +1273,27 @@ def _memberBrowse(uAlias):
     oList = []
     uData = ""
     uDetails = ""
-    print(_menus(3.1))
 
     # Page navigation stuff
     while 1 == 1:
+        _screenClr()
+        print(_menus(3.0))
         uInput = _menuInput("userDash_1")
         if uInput == 1:
             _loader(3)
-            pgNum = 4
-            break
+            list1 = _carSelect(1, uAlias, 0)
+            continue
         elif uInput == 2:
             _loader(3)
             break
         elif uInput == 3:
             _loader(3)
-            oList = _pageExit(1)
-            pgNum = oList[0]
-            break
+            list1 = _pageExit(1, uAlias, 1)
+            return list1
         elif uInput == 4:
             _loader(3)
-            pgNum = 5
-            break
+            list1 = _pageExit(1, uAlias, 0)
+            return list1
         else:
             print(_menus("badInput"))
             _loader(3)
@@ -1237,17 +1397,18 @@ def _adminBrowse(uAlias):
         elif uInput == 6:
             _loader(3)
             list1 = _regSelect()
+            continue
 
         # Logout
         elif uInput == 7:
             _loader(3)
-            list1 = _pageExit(1)
+            list1 = _pageExit(2, uAlias, 1)
             return list1
 
         # Exit
         elif uInput == 8:
             _loader(3)
-            list1 = _pageExit(0)
+            list1 = _pageExit(2, uAlias, 0)
             return list1
 
 
@@ -1508,11 +1669,9 @@ def _pageBrowsing(uType, uAlias):
             return list1
 
 
-def _pageExit(logout):
+def _pageExit(uStatus, uAlias, logout):
     list1 = []
     pgNum = 0
-    uStatus = 0
-    uAlias = ""
 
     # Receiving input from the user (page selection)
     while 1 == 1:
@@ -1545,15 +1704,26 @@ def _pageExit(logout):
         uStatus = 0
         uAlias = ""
 
+        list1.append(pgNum)
+        list1.append(uStatus)
+        list1.append(uAlias)
         _sleep(0.5)
         _loader(11)
         _sleep(0.5)
     else:
-        pgNum = 0
+        if uStatus == 1 or uStatus == 2:
+            pgNum = 3
+            list1.append(pgNum)
+            list1.append(uStatus)
+            list1.append(uAlias)
 
-    list1.append(pgNum)
-    list1.append(uStatus)
-    list1.append(uAlias)
+        else:
+            pgNum = 0
+            uAlias = ""
+            uStatus = 0
+            list1.append(pgNum)
+            list1.append(uStatus)
+            list1.append(uAlias)
 
     return list1
 
@@ -1606,11 +1776,13 @@ while 1 == 1:
 
     # Page 6: Exit Page
     elif pgNo == 5:
-        outputList = _pageExit(0)
+        outputList = _pageExit(userStatus, userAlias, 0)
         pgNo = outputList[0]
-        userStatus = outputList[1]
-        userAlias = outputList[2]
-        if pgNo == 0:
+        try:
+            userStatus = outputList[1]
+            userAlias = outputList[2]
+            continue
+        except:
             continue
 
     elif pgNo == -1:

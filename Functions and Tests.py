@@ -1,3 +1,9 @@
+from datetime import *
 
-def pageLogin():
+paymentDateTime = ""
+paymentDateTime = str(datetime.now())
+paymentDate = paymentDateTime.split(" ")[0]
+paymentTime = paymentDateTime.split(" ")[1]
 
+print(paymentDate)
+print(paymentTime)
