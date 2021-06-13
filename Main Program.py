@@ -409,6 +409,10 @@ def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return ca
     newList = []
     newCar = ""
     output = 0
+    uData = []
+    uDataNew = []
+    uNewList = []
+    carFind = 0
 
     if mode == 0:
         while 1 == 1:
@@ -458,18 +462,66 @@ def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return ca
                 continue
 
         _loader(3)
-        if confirmation == 2:
-            output = 0
-            return output
 
+        # Modify Mode Output (1 = successful, 2 = failed [process terminated])
+        if mode == 0:
+            if confirmation == 1:
+                with open(_fileSelect(4), "w") as openedFile:
+                    for ind in range(len(newList)):
+                        newCar = _constantVar(1).join(newList[ind])
+                        openedFile.write(newCar + "\n")
+                output = 1
+                return output
 
-        with open (_fileSelect(4), "w") as openedFile:
-            for ind in range(len(newList)):
-                newCar = _constantVar(1).join(newList[ind])
-                openedFile.write(newCar + "\n")
+            elif confirmation == 2:
+                output = 0
+                return output
 
-        output = 1
-        return output
+        # Return Mode Output (1 = successful, 2 = failed [process terminated], 3 = failed[carID not found in member file])
+        elif mode == 1:
+            if confirmation == 1:
+                with open(_fileSelect(1), "r") as openedFile:
+                    carFind = 0
+                    for line in openedFile:
+                        uData = line.rstrip("\n").split(_constantVar(1))
+                        if carID == uData[2]:
+                            uDataNew = uData[::]
+                            uDataNew[2] = ""
+                            uNewList.append(uDataNew)
+                            carFind = 1
+                        else:
+                            uNewList.append(uData)
+
+                # Car is currently rented by a user
+                if carFind == 1:
+
+                    # Updating member file
+                    with open(_fileSelect(1), "w") as openedFile:
+                        for ind in range(len(uNewList)):
+                            uLineNew = _constantVar(1).join(uNewList[ind])
+                            openedFile.write(uLineNew + "\n")
+
+                    # Updating car file
+                    with open(_fileSelect(4), "w") as openedFile:
+                        for ind in range(len(newList)):
+                            newCar = _constantVar(1).join(newList[ind])
+                            openedFile.write(newCar + "\n")
+
+                    _screenClr()
+                    print(uDataNew[0] + " has successfully returned car: " + carListNew[1] + " (ID: " + carID + ")")
+                    output = 1
+                    return output
+
+                elif carFind == 0:
+                    _screenClr()
+                    print("Error: Car is not currently being rented by any users.")
+                    output = 3
+                    return output
+
+            elif confirmation == 2:
+                output = 2
+                return output
+
 
 
 
@@ -522,6 +574,7 @@ def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return ca
 #             print(_menus("badInput"))
 #             _loader(3)
 #             continue
+
 
 
 
@@ -648,7 +701,7 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                             else:
                                 print("Process was terminated!")
                             _sleep(0.5)
-                            _loader(3)
+                            _loader(5)
                             while 1 == 1:
                                 _screenClr()
                                 if outputMod == 1:
@@ -686,16 +739,14 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                             adminSelect2 = 0
                             outputMod = _carModify(carID, 1)
 
-                            _screenClr()
-                            if outputMod == 1:
-                                print("Car details have successfully updated!")
-                            else:
+                            if outputMod == 2:
+                                _screenClr()
                                 print("Process was terminated!")
                             _sleep(0.5)
-                            _loader(3)
+                            _loader(5)
                             while 1 == 1:
-                                _screenClr()
                                 if outputMod == 1:
+                                    _screenClr()
                                     print(_menus(7.3))
                                     adminSelect2 = _menuInput("carReturn_1")
                                     if adminSelect2 == 1:
@@ -711,7 +762,8 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                                         print(_menus("badInput"))
                                         _loader(3)
                                         continue
-                                else:
+                                elif outputMod == 2:
+                                    _screenClr()
                                     print(_menus(7.4))
                                     adminSelect2 = _menuInput("carReturn_2")
                                     if adminSelect2 == 1:
@@ -725,6 +777,9 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                                         print(_menus("badInput"))
                                         _loader(3)
                                         continue
+                                elif outputMod == 3:
+                                    counter = -1
+                                    break
 
                             if adminSelect2 == 1 and outputMod == 0:
                                 continue
