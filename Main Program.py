@@ -161,10 +161,14 @@ def _constantVar(num):
 
     # Layer 3 Separator
     elif num == 3:
-        var = "."
+        var = "$"
+
+
+    elif num == 4:
+        var = "!"
 
     # Input Separator
-    elif num == 4:
+    elif num == 5:
         var = ";"
 
     return var
@@ -539,6 +543,7 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
     carListNew = []
     _screenClr()
     carData = []
+    carDataTemp = []
     carDataNew = []
     uData = []
     uDataNew = []
@@ -552,12 +557,15 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
     confirmation = 0
     dayNum = 0
     amtDue = 0
+
+    # Retrieving car data in a list
     with open(_fileSelect(4), "r") as openedFile:
         for line in openedFile:
             carData = line.rstrip("\n").split(_constantVar(1))
             if carID == carData[0]:
                 break
 
+    # Retrieving user data in a list
     with open(_fileSelect(1), "r") as openedFile:
         for line in openedFile:
             uData = line.rstrip("\n").split(_constantVar(1))
@@ -572,16 +580,23 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
                 output = 3
                 return output
 
+            # Receiving input (number of days for car to be rented)
             dayNum = int(input(_menus(8.0)))
             _loader(3)
             _screenClr()
+
+            # Receiving input (user confirmation)
             confirmation = int(input("=- Car Booking -=\nBook the following car?\nID             : " + str(carData[0]) + "\nModel          : " + str(carData[1]) + "\nType           : " + str(carData[2]) + "\nRate(per day)  : RM " + str(carData[4]) + "\nDays           : " + str(dayNum) + "\n\n1 - Yes\n2 - No (Back to browsing page)\n\nPlease enter a corresponding value:\n> "))
             if confirmation == 1:
                 _loader(3)
                 while 1 == 1:
                     _screenClr()
                     try:
+
+                        # Calculation of payment
                         amtDue = int(carData[4]) * int(dayNum)
+
+                        # Receiving user payment
                         amtPayment = int(input("=- Car Booking -=\nAmount due: RM " + str(amtDue) + "\n\nPlease enter payment amount:\n> RM "))
                         difference = amtPayment - amtDue
                         if difference > 0:
@@ -602,7 +617,10 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
                         paymentTimeData.append(paymentDateTime.split(" ")[1])
 
                         # Preparing Rental History String
-                        rentalHistory = _constantVar(3).join(carData)
+                        carDataTemp = carData[::]
+                        carDataTemp.append(_constantVar(4).join(paymentTimeData))
+                        carDataTemp.append(str(dayNum))
+                        rentalHistory = _constantVar(3).join(carDataTemp)
                         if rentalHistory1List[0] == "":
                             rentalHistory1List[0] = rentalHistory
                         else:
@@ -622,11 +640,12 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
                         bookingData.append(uData[0][::])
                         bookingData.append(_constantVar(2).join(carDataNew))
                         bookingData.append(_constantVar(2).join(paymentTimeData))
-                        bookingData.append(dayNum)
+                        bookingData.append(str(dayNum))
 
                         # Preparing Payment Data List
                         paymentData.append(uData[0][::])
                         paymentData.append(amtPayment)
+                        paymentData.append(carData[0][::])
                         paymentData.append(_constantVar(2).join(paymentTimeData))
 
                         # Updating User File
@@ -673,13 +692,12 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
                         _loader(5)
                         return output
 
-
-
                     except:
                         print(_menus("badInput"))
                         _loader(3)
                         continue
 
+            # User cancels booking (terminates process)
             elif confirmation == 2:
                 _loader(3)
                 output = 2
@@ -1013,7 +1031,7 @@ def _carAdd():
                 _loader(3)
                 continue
         except:
-            carData = carInp.split(_constantVar(4))
+            carData = carInp.split(_constantVar(5))
 
             # Validating that the user has entered the correct amount of fields
             if len(carData) != 5:
@@ -1094,6 +1112,33 @@ def _carAdd():
     pgNum = 3
     list1.append(pgNum)
     return list1
+
+
+
+
+def _rentalHistory(uAlias):
+    pgNum = 0
+    list1 = []
+    uData = []
+    uRentalHistory = []
+    rentalData = []
+    counter = 0
+
+    while 1 == 1:
+        _screenClr()
+        with open(_fileSelect(1), "r") as openedFile:
+            for line in openedFile:
+                uData = line.rstrip("\n").split(_constantVar(1))
+                if uAlias == uData[0]:
+                    uRentalHistory = uData[3].split(_constantVar(2))
+                    if len(uRentalHistory) == 1:
+                        rentalData = uRentalHistory[::]
+                    else:
+                        rentalData = uRentalHistory[counter]
+
+        print("=- Rental History -=\nCar ID              : " + rentalData[0] + "\nModel              :")
+
+
 
 
 

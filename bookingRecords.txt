@@ -1,2 +1,1 @@
-Alexis#CA0001|Honda City|Sedan|1|350#2021-06-13|13:07:05.149353#5
-Alexis#CA0003|Volkswagen Passat|Sedan|1|500#2021-06-13|13:10:07.862813#1
+Alexis#CA0001|Honda City|Sedan|1|350#2021-06-14|13:11:03.328826#5
