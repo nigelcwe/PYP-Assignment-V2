@@ -1,3 +1,1 @@
-Alexis#CA0001|Honda City|Sedan|1|350#2021-06-14|13:11:03.328826#5
-Alexis#CA0003|Volkswagen Passat|Sedan|1|500#2021-06-14|15:59:00.391777#2
-Melvyn#CA0005|BMW 5Series|Sedan|1|500#2021-06-14|16:25:36.113773#2
+Alexis#CA0004|Honda Accord|Sedan|1|350#2021-06-15|04:30:49.403061#5

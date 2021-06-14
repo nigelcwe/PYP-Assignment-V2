@@ -84,6 +84,12 @@ def _menus(num):
             menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - View car records\n2 - View payment records\n3 - Back\n"
         elif num == 4.2:
             menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Seach for specific bookings\n2 - Search for specific payments\n3 - Back\n"
+        elif num == 4.6:
+            menu = "=- View Payment Records -=\nPlease enter a date to seach:    (yyyy/mm/dd)\nOther options:\n1 - Back\n\n> "
+        elif num == 4.7:
+            menu = "=- Search Booking Records -=\nWhat would you like to search by?\n1 - Alias\n2 - Car ID\n3 - Back\n"
+        elif num == 4.8:
+            menu = "=- Search Payment Records -=\nWhat would you like to search by?\n1 - Alias\n2 - Car ID\n3 - Back\n"
 
         # Registration Confirm Menus
         elif num == 4.3:
@@ -114,6 +120,8 @@ def _menus(num):
             menu = "=- Car Return -=\nPlease select an option:\n1 - Return another car\n2 - Back to Admin Dashboard\n"
         elif num == 7.4:
             menu = "=- Car Return -=\nPlease select an option:\n1 - Try again\n2 - Return another car\n3 - Back to Admin Dashboard\n"
+        elif num == 7.5:
+            menu = "=- Edit Car Details -=\nPlease select an option:\n1 - Choose another car to edit\n2 - Back to Admin Dashboard\n"
 
         # Member Car Page Menus
         elif num == 8.0:
@@ -217,6 +225,8 @@ def _menuInput(menu):
                 print(_menus(7.1))
             elif menu == "carModify_2":
                 print(_menus(7.2))
+            elif menu == "carModify_3":
+                print(_menus(7.5))
             elif menu == "carReturn_1":
                 print(_menus(7.3))
             elif menu == "carReturn_2":
@@ -478,18 +488,27 @@ def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return ca
 
         _loader(3)
 
-        # Modify Mode Output (1 = successful, 2 = failed [process terminated])
+        # Modify Mode Output (1 = successful, 2 = failed [process terminated], 3 = failed [car is being rented])
         if mode == 0:
             if confirmation == 1:
+
+                # Checking if car is being rented
+                with open(_fileSelect(1), "r") as openedFile:
+                    for line in openedFile:
+                        if carID == line.rstrip("\n").split(_constantVar(1))[2]:
+                            output = 3
+                            return output
+
+                # Updating car file
                 with open(_fileSelect(4), "w") as openedFile:
                     for ind in range(len(newList)):
                         newCar = _constantVar(1).join(newList[ind])
                         openedFile.write(newCar + "\n")
-                output = 1
-                return output
+                        output = 1
+                        return output
 
             elif confirmation == 2:
-                output = 0
+                output = 2
                 return output
 
         # Return Mode Output (1 = successful, 2 = failed [process terminated], 3 = failed[carID not found in member file])
@@ -652,6 +671,7 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
                         paymentData.append(uData[0][::])
                         paymentData.append(amtPayment)
                         paymentData.append(carData[0][::])
+                        paymentData.append(str(dayNum))
                         paymentData.append(_constantVar(2).join(paymentTimeData))
 
                         # Updating User File
@@ -884,8 +904,10 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                             _screenClr()
                             if outputMod == 1:
                                 print("Car details have successfully updated!")
-                            else:
+                            elif outputMod == 2:
                                 print("Process was terminated!")
+                            elif outputMod == 3:
+                                print("Error! Car is currently rented by a user.")
                             _sleep(0.5)
                             _loader(5)
                             while 1 == 1:
@@ -893,17 +915,28 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                                 if outputMod == 1:
                                     print(_menus(7.1))
                                     adminSelect1 = _menuInput("carModify_1")
-                                else:
+                                elif outputMod == 2:
                                     print(_menus(7.2))
                                     adminSelect1 = _menuInput("carModify_2")
+                                elif outputMod == 3:
+                                    print(_menus(7.5))
+                                    adminSelect1 = _menuInput("carModify_3")
                                 if adminSelect1 == 1:
+                                    if outputMod == 3:
+                                        counter = -1
                                     _loader(3)
                                     break
                                 elif adminSelect1 == 2:
-                                    counter = -1
-                                    _loader(3)
-                                    break
-                                elif adminSelect1 == 3:
+                                    if outputMod == 3:
+                                        _loader(3)
+                                        pgNum = 3
+                                        list1.append(pgNum)
+                                        return list1
+                                    else:
+                                        counter = -1
+                                        _loader(3)
+                                        break
+                                elif adminSelect1 == 3 and outputMod != 3:
                                     _loader(3)
                                     pgNum = 3
                                     list1.append(pgNum)
@@ -912,7 +945,7 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                                     print(_menus("badInput"))
                                     _loader(3)
                                     continue
-                            if adminSelect1 == 1:
+                            if adminSelect1 == 1 and outputMod != 3:
                                 continue
                             else:
                                 break
@@ -1188,6 +1221,34 @@ def _rentalHistory(uAlias):
 
 
 
+# def _paySearchDate():
+#     pgNum = 0
+#     list1 = []
+#     uInpDate = []
+#     while 1 == 1:
+#         _screenClr()
+#         try:
+#             uInp = input(_menus(4.6))
+#             if uInp == 1:
+#                 _loader(3)
+#                 pgNum = 3
+#                 list1.append(pgNum)
+#                 return list1
+#             else:
+#                 print(_menus("badInput"))
+#                 _loader(3)
+#                 continue
+#         except:
+#             uInp = str(uInp)
+#             uInpDate = uInp.split("/")
+#             for i in range(5):
+#
+
+
+
+
+
+
 
 def _pwValidation(pw):
     pwInvalidChars = ["\\", "#", "|", ".", ";"]
@@ -1380,7 +1441,7 @@ def _memberBrowse(uAlias):
         elif uInput == 3:
             _loader(3)
             list1 = _pageExit(1, uAlias, 1)
-            continue
+            return list1
         elif uInput == 4:
             _loader(3)
             list1 = _pageExit(1, uAlias, 0)
@@ -1421,16 +1482,16 @@ def _adminBrowse(uAlias):
             while 1 == 1:
                 _screenClr()
                 print(_menus(4.1))
-                uInp2 = _menuInput("adminDash_2")
+                uInput2 = _menuInput("adminDash_2")
                 if uInp2 == 1:
                     _loader(3)
                     list1 = _carSelect(2, uAlias, 0)
                     break
-                elif uInp2 == 2:
+                elif uInput2 == 2:
                     _loader(3)
-                    list1 = []#function for payment viewing
+                    list1 = _paySearchDate()
                     break
-                elif uInp2 == 3:
+                elif uInput2 == 3:
                     _loader(3)
                     break
                 else:
@@ -1445,16 +1506,16 @@ def _adminBrowse(uAlias):
             while 1 == 1:
                 _screenClr()
                 print(_menus(4.2))
-                uInp2 = _menuInput("adminDash_3")
-                if uInp2 == 1:
+                uInput2 = _menuInput("adminDash_3")
+                if uInput2 == 1:
                     _loader(3)
                     list1 = []# function for searching bookings
                     break
-                elif uInp2 == 2:
+                elif uInput2 == 2:
                     _loader(3)
                     list1 = []# function for searching payments
                     break
-                elif uInp2 == 3:
+                elif uInput2 == 3:
                     _loader(3)
                     break
                 else:
