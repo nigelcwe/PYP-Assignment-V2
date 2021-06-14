@@ -1,6 +1,6 @@
-CA0001#Honda City#Sedan#1#350
+CA0001#Honda City#Sedan#0#350
 CA0002#Perodua Myvi#Compact#0#200
-CA0003#Volkswagen Passat#Sedan#0#500
+CA0003#Volkswagen Passat#Sedan#1#500
 CA0004#Toyota Camry#Sedan#0#350
 CA0005#BMW 5Series#Sedan#0#500
 CA0006#Toyota Vios#Sedan#0#350

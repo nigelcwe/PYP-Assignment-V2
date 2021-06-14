@@ -73,6 +73,10 @@ def _menus(num):
         elif num == 3.0:
             menu = "=- Member Dashboard -=\nWhat would you like to do?\n1 - Browse cars\n2 - View rental history\n3 - Log out\n4 - Exit\n"
 
+        # Member Rental History Menu
+        elif num == 3.1:
+            menu = "\nOptions:\n1 - Next page\n2 - Previous page\n3 - Back\n\nPlease enter a corresponding value:\n> "
+
         # Admin Dashboard Menus (admin browsing page)
         elif num == 4.0:
             menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Add a car\n2 - Modify car details\n3 - View records (Cars or Payments)\n4 - Search specific records (Bookings or Payments)\n5 - Return a car\n6 - Confirm registrations\n7 - Log out\n8 - Exit\n"
@@ -163,7 +167,7 @@ def _constantVar(num):
     elif num == 3:
         var = "$"
 
-
+    # Layer 4 Separator
     elif num == 4:
         var = "!"
 
@@ -197,6 +201,8 @@ def _menuInput(menu):
                 print(_menus(2.4))
             elif menu == "userDash_1":
                 print(_menus(3.0))
+            elif menu == "rentalHistory_1":
+                print(_menus(3.1))
             elif menu == "adminDash_1":
                 print(_menus(4.0))
             elif menu == "adminDash_2":
@@ -1126,19 +1132,56 @@ def _rentalHistory(uAlias):
 
     while 1 == 1:
         _screenClr()
+        if counter < 0 :
+            counter = 0
         with open(_fileSelect(1), "r") as openedFile:
             for line in openedFile:
                 uData = line.rstrip("\n").split(_constantVar(1))
                 if uAlias == uData[0]:
                     uRentalHistory = uData[3].split(_constantVar(2))
-                    if len(uRentalHistory) == 1:
-                        rentalData = uRentalHistory[::]
-                    else:
-                        rentalData = uRentalHistory[counter]
+                    try:
+                        rentalData = uRentalHistory[counter].split(_constantVar(3))
+                        break
+                    except:
+                        rentalData = ["Null", "Null", "Null", "Null", "Null", "Null!Null", "Null"]
+                        break
 
-        print("=- Rental History -=\nCar ID              : " + rentalData[0] + "\nModel              :")
+        print("=- Rental History -=\nCar ID    : " + rentalData[0] + "\nModel     : " + rentalData[1] + "\nType      : " +rentalData[2] + "\nDate      : " + rentalData[5].split(_constantVar(4))[0] + "\nTime      : " +rentalData[5].split(_constantVar(4))[1] + "\nDays      : " + rentalData[6])
+        if rentalData[0] == "Null":
+            print("\n_______End of List_______")
 
+        # Receiving user input (page navigation)
+        memInp = input(_menus(3.1))
 
+        # Checking for integer only input
+        try:
+            memInp = int(memInp)
+        except:
+            print(_menus("badInput"))
+            _loader(3)
+            continue
+
+        # Checking for end of list
+        if memInp == 1:
+            if rentalData[0] != "Null":
+                counter = counter + 1
+            else:
+                counter = counter
+            _loader(3)
+            continue
+        elif memInp == 2:
+            counter = counter - 1
+            _loader(3)
+            continue
+        elif memInp == 3:
+            pgNum = 3
+            list1.append(pgNum)
+            _loader(3)
+            return list1
+        else:
+            print(_menus("badInput"))
+            _loader(3)
+            continue
 
 
 
@@ -1330,38 +1373,24 @@ def _memberBrowse(uAlias):
             continue
         elif uInput == 2:
             _loader(3)
-            break
+            list1 = _rentalHistory(uAlias)
+            continue
         elif uInput == 3:
             _loader(3)
             list1 = _pageExit(1, uAlias, 1)
-            return list1
+            continue
         elif uInput == 4:
             _loader(3)
             list1 = _pageExit(1, uAlias, 0)
-            return list1
+            return list11
         else:
             print(_menus("badInput"))
             _loader(3)
             _screenClr()
             print(_menus(3.1))
 
-    # Displaying Member Details
-    if uInput == 2:
-        while 1 == 1:
-            _screenClr()
-            with open(_fileSelect(1), "r") as openedFile:
-                for line in openedFile:
-                    uData = line.rstrip("\n")
-                    if uAlias == uData.split(_constantVar(1))[0]:
-                        tempAlias = uData.split(_constantVar(1))[0]
-                        if uData.split(_constantVar(1))[2] == "":
-                            tempCar = "Null"
-                        else:
-                            tempCar = uData.split(_constantVar(1))[2]
-                        uDetails = "=- User Details -=\nAlias: " + tempAlias + "\nRented Car: " + tempCar
-                        print(uDetails)
-                    else:
-                        continue
+
+
 
 
 def _adminBrowse(uAlias):
@@ -1699,18 +1728,18 @@ def _pageBrowsing(uType, uAlias):
     list1 = []
     while 1 == 1:
 
-        # Go to guest car page
-        # if uType == 0:
-
-
         # Go to member browsing page
         if uType == 1:
             list1 = _memberBrowse(uAlias)
+            list1.append(1)
+            list1.append(uAlias)
             return list1
 
         # Go to admin browsing page
         elif uType == 2:
             list1 = _adminBrowse(uAlias)
+            list1.append(2)
+            list1.append(uAlias)
             return list1
 
 
