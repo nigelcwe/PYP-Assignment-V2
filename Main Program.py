@@ -83,13 +83,15 @@ def _menus(num):
         elif num == 4.1:
             menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - View car records\n2 - View payment records\n3 - Back\n"
         elif num == 4.2:
-            menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Seach for specific bookings\n2 - Search for specific payments\n3 - Back\n"
+            menu = "=- Admin Dashboard -=\nWhat would you like to do?\n1 - Search for specific bookings\n2 - Search for specific payments\n3 - Back\n"
         elif num == 4.6:
-            menu = "=- View Payment Records -=\nPlease enter a date to seach:    (yyyy/mm/dd)\nOther options:\n1 - Back\n\n> "
+            menu = "=- View Payment Records -=\n\nPlease enter the rental duration (days):\n\n> "
         elif num == 4.7:
             menu = "=- Search Booking Records -=\nWhat would you like to search by?\n1 - Alias\n2 - Car ID\n3 - Back\n"
         elif num == 4.8:
             menu = "=- Search Payment Records -=\nWhat would you like to search by?\n1 - Alias\n2 - Car ID\n3 - Back\n"
+        elif num == 4.9:
+            menu = "\nOptions:\n1 - Next page\n2 - Previous page\n3 - Change search value\n4 - Back to Admin Dashboard\n\nPlease enter a corresponding value:\n> "
 
         # Registration Confirm Menus
         elif num == 4.3:
@@ -237,6 +239,8 @@ def _menuInput(menu):
                 print(_menus(4.5))
             elif menu == "carBook_1":
                 print(_menus(8.1))
+            elif menu == "searchFunctions":
+                print(_menus(4.9))
             elif menu == "exit":
                 print(_menus(5))
     # Continue for as many pages as needed
@@ -1181,7 +1185,7 @@ def _rentalHistory(uAlias):
                         rentalData = ["Null", "Null", "Null", "Null", "Null", "Null!Null", "Null"]
                         break
 
-        print("=- Rental History -=\nCar ID    : " + rentalData[0] + "\nModel     : " + rentalData[1] + "\nType      : " +rentalData[2] + "\nDate      : " + rentalData[5].split(_constantVar(4))[0] + "\nTime      : " +rentalData[5].split(_constantVar(4))[1] + "\nDays      : " + rentalData[6])
+        print("=- Rental History -=\nCar ID    : " + rentalData[0] + "\nModel     : " + rentalData[1] + "\nType      : " + rentalData[2] + "\nDate      : " + rentalData[5].split(_constantVar(4))[0] + "\nTime      : " +rentalData[5].split(_constantVar(4))[1] + "\nDays      : " + rentalData[6])
         if rentalData[0] == "Null":
             print("\n_______End of List_______")
 
@@ -1221,28 +1225,151 @@ def _rentalHistory(uAlias):
 
 
 
-# def _paySearchDate():
-#     pgNum = 0
-#     list1 = []
-#     uInpDate = []
-#     while 1 == 1:
-#         _screenClr()
-#         try:
-#             uInp = input(_menus(4.6))
-#             if uInp == 1:
-#                 _loader(3)
-#                 pgNum = 3
-#                 list1.append(pgNum)
-#                 return list1
-#             else:
-#                 print(_menus("badInput"))
-#                 _loader(3)
-#                 continue
-#         except:
-#             uInp = str(uInp)
-#             uInpDate = uInp.split("/")
-#             for i in range(5):
-#
+def _paySearchDur():
+    pgNum = 0
+    list1 = []
+    recData = []
+    findList = []
+    loadedList = []
+    findCount = 0
+    counter = -1
+    pad = " "
+    recList = []
+    while 1 == 1:
+        counter = -1
+        findCount = 0
+        findList = []
+        loadedList = []
+        try:
+            _screenClr()
+            uInp = int(input(_menus(4.6)))
+            _loader(3)
+            _screenClr()
+            uInp2 = int(input("=- View Payment Records -=\nDays      : " + str(uInp) + "\n\nOptions:\n1 - Proceed to view records\n2 - Back\n\nPlease enter a corresponding value:\n> "))
+            if uInp2 == 1:
+                _loader(3)
+                with open(_fileSelect(5), "r") as openedFile:
+                    for line in openedFile:
+                        recData = line.rstrip("\n").split(_constantVar(1))
+                        if int(recData[3]) == uInp:
+                            findList.append(recData)
+                            findCount = findCount + 1
+
+                    if findCount == 0:
+                        _screenClr()
+                        print("No records with rental duration of " + str(uInp) + " found!")
+                        _sleep(0.5)
+                        _loader(3)
+                        pgNum = 3
+                        list1.append(pgNum)
+                        return list1
+
+            elif uInp2 == 2:
+                _loader(3)
+                pgNum = 3
+                list1.append(pgNum)
+                return list1
+
+            else:
+                print(_menus("badInput"))
+                _loader(3)
+                continue
+
+        except:
+            print(_menus("badInput"))
+            _loader(3)
+            continue
+
+        while 1 == 1:
+            i = 0
+            loadedList = []
+            if counter < -1:
+                counter = -1
+            _screenClr()
+            print("=- Payment List -=\n\tAlias                 Amount            Car ID           Duration         Date              Time\n")
+            try:
+                while i < 5:
+                    loadedList = findList[(counter + 1)]
+                    print(str(i + 1) + " - " + (loadedList[0] + pad * (20 - len(loadedList[0]))) + ": RM " + (loadedList[1] + pad * (13 - len(loadedList[1]))) + ": " + (loadedList[2] + pad * (15 - len(loadedList[2]))) + ": " + (loadedList[3] + pad * (15 - len(loadedList[3]))) + ": " + (loadedList[4].split(_constantVar(2))[0] + pad * (15 - len(loadedList[4].split(_constantVar(2))[0]))) + " : " + (loadedList[4].split(_constantVar(2))[1] + pad * (15 - len(loadedList[4].split(_constantVar(2))[1]))))
+                    counter = counter + 1
+                    i = i + 1
+            except:
+                print("_______End of List_______")
+
+            try:
+                uInp3 = int(input(_menus(4.9)))
+                if uInp3 == 1:
+                    _loader(3)
+                    continue
+                elif uInp3 == 2:
+                    counter = counter - 10
+                    _loader(3)
+                    continue
+                elif uInp3 == 3:
+                    _loader(3)
+                    break
+                elif uInp3 == 4:
+                    pgNum = 3
+                    list1.append(pgNum)
+                    _loader(3)
+                    return list1
+                else:
+                    print(_menus("badInput"))
+                    counter = counter - 5
+                    _loader(3)
+                    continue
+
+            except:
+                print(_menus("badInput"))
+                counter = counter - 5
+                _loader(3)
+                continue
+        continue
+            # if counter < 0:
+            #     counter = 0
+            # try:
+            #     _screenClr()
+            #     loadedList = findList[counter][::]
+            #     print(loadedList[0])
+            #     print("=- View Payment Records -=\nAlias     : " + loadedList[0] + "\nAmount    : RM " + loadedList[1] + "\nCar ID    : " + loadedList[2] + "\nDuration  : " + loadedList[3] + "\nDate      : " + loadedList[4].split(_constantVar(2))[0] + "\nTime      : " + loadedList[4].split(_constantVar(2))[1])
+            #     if findList[counter][0] == "Null":
+            #         print("\n_______End of List_______")
+        #         print(_menus(4.9))
+        #         uInp3 = _menuInput("searchFunctions")
+        #         if uInp3 == 1:
+        #             if findList[counter][0] == "Null":
+        #                 _loader(3)
+        #                 continue
+        #             else:
+        #                 counter = counter + 1
+        #                 _loader(3)
+        #                 continue
+        #         elif uInp3 == 2:
+        #             counter = counter - 1
+        #             _loader(3)
+        #             continue
+        #         elif uInp3 == 3:
+        #             _loader(3)
+        #             break
+        #         elif uInp3 == 4:
+        #             pgNum = 3
+        #             list1.append(pgNum)
+        #             _loader(3)
+        #             return list1
+        #         else:
+        #             print(_menus("badInput"))
+        #             _loader(3)
+        #             continue
+        #
+        #
+        #
+        #     except:
+        #         list2 = ["Null", "Null", "Null", "Null", "Null|Null"]
+        #         findList.append(list2)
+        #         continue
+        #
+        # continue
+
 
 
 
@@ -1483,13 +1610,13 @@ def _adminBrowse(uAlias):
                 _screenClr()
                 print(_menus(4.1))
                 uInput2 = _menuInput("adminDash_2")
-                if uInp2 == 1:
+                if uInput2 == 1:
                     _loader(3)
                     list1 = _carSelect(2, uAlias, 0)
                     break
                 elif uInput2 == 2:
                     _loader(3)
-                    list1 = _paySearchDate()
+                    list1 = _paySearchDur()
                     break
                 elif uInput2 == 3:
                     _loader(3)
