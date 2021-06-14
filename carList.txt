@@ -1,4 +1,4 @@
-CA0001#Honda City#Sedan#0#350
+CA0001#Honda Civic#Sedan#0#350
 CA0002#Perodua Myvi#Compact#0#200
 CA0003#Volkswagen Passat#Sedan#0#500
 CA0004#Honda Accord#Sedan#1#350

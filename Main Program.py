@@ -504,8 +504,8 @@ def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return ca
                     for ind in range(len(newList)):
                         newCar = _constantVar(1).join(newList[ind])
                         openedFile.write(newCar + "\n")
-                        output = 1
-                        return output
+                    output = 1
+                    return output
 
             elif confirmation == 2:
                 output = 2
