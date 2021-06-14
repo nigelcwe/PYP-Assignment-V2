@@ -592,7 +592,7 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
             _screenClr()
 
             # Receiving input (user confirmation)
-            confirmation = int(input("=- Car Booking -=\nBook the following car?\nID             : " + str(carData[0]) + "\nModel          : " + str(carData[1]) + "\nType           : " + str(carData[2]) + "\nRate(per day)  : RM " + str(carData[4]) + "\nDays           : " + str(dayNum) + "\n\n1 - Yes\n2 - No (Back to browsing page)\n\nPlease enter a corresponding value:\n> "))
+            confirmation = int(input("=- Car Booking -=\nBook the following car?\nID             : " + str(carData[0]) + "\nModel          : " + str(carData[1]) + "\nType           : " + str(carData[2]) + "\nRate(per day)  : RM " + str(carData[4]) + "\nDays           : " + str(dayNum) + "\n\nOptions:\n1 - Yes\n2 - No (Back to browsing page)\n\nPlease enter a corresponding value:\n> "))
             if confirmation == 1:
                 _loader(3)
                 while 1 == 1:
@@ -1141,6 +1141,8 @@ def _rentalHistory(uAlias):
                     uRentalHistory = uData[3].split(_constantVar(2))
                     try:
                         rentalData = uRentalHistory[counter].split(_constantVar(3))
+                        if rentalData[0] == "":
+                            rentalData = ["Null", "Null", "Null", "Null", "Null", "Null!Null", "Null"]
                         break
                     except:
                         rentalData = ["Null", "Null", "Null", "Null", "Null", "Null!Null", "Null"]
@@ -1382,7 +1384,7 @@ def _memberBrowse(uAlias):
         elif uInput == 4:
             _loader(3)
             list1 = _pageExit(1, uAlias, 0)
-            return list11
+            return list1
         else:
             print(_menus("badInput"))
             _loader(3)
