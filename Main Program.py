@@ -1624,7 +1624,7 @@ def _login(userType):
                 _loader(3)
                 pgNum = 2
                 break
-            if alias == 2:
+            elif alias == 2:
                 _loader(3)
                 pgNum = 5
                 break
