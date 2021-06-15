@@ -33,7 +33,7 @@ def _loader(dots):
         print(" . ", end="")
         dots = dots - 1
     _sleep(0.33)
-    print()
+    print("")
 
 
 
@@ -93,7 +93,7 @@ def _menus(num):
         elif num == 4.9:
             menu = "\nOptions:\n1 - Next page\n2 - Previous page\n3 - Change search criteria\n4 - Back to Admin Dashboard\n\nPlease enter a corresponding value:\n> "
 
-        # Registration Confirm Menus
+        # Registration Confirmation Menus
         elif num == 4.3:
             menu = "\nOther options:\n6 - Next Page\n7 - Previous Page\n8 - Back\n\nPlease enter a corresponding value:\n> "
         elif num == 4.4:
