@@ -435,6 +435,8 @@ def _regSelect():
 
 
 def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return car)
+    pgNum = 0
+    list1 = []
     adminInp = 0
     carList = []
     carListOld = []
@@ -565,6 +567,9 @@ def _carModify(carID, mode):          # Mode: (0 - Modify details, 1 - Return ca
                 output = 2
                 return output
 
+    else:
+        output = 2
+        return output
 
 
 
