@@ -1415,7 +1415,7 @@ def _bookingSearch():
             if counter < -1:
                 counter = -1
             _screenClr()
-            print("=- Payment List -=\n\tAlias                       Car ID              Model                       Days                Date                Time\n")
+            print("=- Booking List -=\n\tAlias                       Car ID              Model                       Days                Date                Time\n")
             try:
                 while i < 5:
                     loadedList = findList[(counter + 1)]
