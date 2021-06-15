@@ -782,8 +782,8 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                     carLine = fileList[(counter + 1)].rstrip("\n")
                     carData = carLine.split(_constantVar(1))
 
-                    # For admins and members to view only cars that are available for rental
-                    if (uStatus == 2 or uStatus == 1) and mode == 0:
+                    # For members to view only cars that are available for rental
+                    if  uStatus == 1 and mode == 0:
                         if int(carData[3]) == 1:
                             counter = counter + 1
                             continue
