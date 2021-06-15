@@ -91,7 +91,7 @@ def _menus(num):
         elif num == 4.8:
             menu = "=- Search Payment Records -=\nWhat would you like to search by?\n1 - Alias\n2 - Car ID\n3 - Back\n"
         elif num == 4.9:
-            menu = "\nOptions:\n1 - Next page\n2 - Previous page\n3 - Change search value\n4 - Back to Admin Dashboard\n\nPlease enter a corresponding value:\n> "
+            menu = "\nOptions:\n1 - Next page\n2 - Previous page\n3 - Change search criteria\n4 - Back to Admin Dashboard\n\nPlease enter a corresponding value:\n> "
 
         # Registration Confirm Menus
         elif num == 4.3:
@@ -241,6 +241,10 @@ def _menuInput(menu):
                 print(_menus(8.1))
             elif menu == "searchFunctions":
                 print(_menus(4.9))
+            elif menu == "paymentRecords_1":
+                print(_menus(4.8))
+            elif menu == "bookingRecords_1":
+                print(_menus(4.7))
             elif menu == "exit":
                 print(_menus(5))
     # Continue for as many pages as needed
@@ -416,6 +420,7 @@ def _regSelect():
 
             else:
                 print(_menus("badInput"))
+                counter = -1
                 _loader(3)
                 continue
 
@@ -626,7 +631,7 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
                         amtDue = int(carData[4]) * int(dayNum)
 
                         # Receiving user payment
-                        amtPayment = int(input("=- Car Booking -=\nAmount due: RM " + str(amtDue) + "\n\nPlease enter payment amount:\n> RM "))
+                        amtPayment = int(input("=- Car Booking -=\nAmount due: RM " + str(amtDue) + "\n\nPlease enter payment amount:\n\n> RM "))
                         difference = amtPayment - amtDue
                         if difference > 0:
                             print("Payment amount is greater than amount due! Please try again.")
@@ -1325,53 +1330,229 @@ def _paySearchDur():
                 _loader(3)
                 continue
         continue
-            # if counter < 0:
-            #     counter = 0
-            # try:
-            #     _screenClr()
-            #     loadedList = findList[counter][::]
-            #     print(loadedList[0])
-            #     print("=- View Payment Records -=\nAlias     : " + loadedList[0] + "\nAmount    : RM " + loadedList[1] + "\nCar ID    : " + loadedList[2] + "\nDuration  : " + loadedList[3] + "\nDate      : " + loadedList[4].split(_constantVar(2))[0] + "\nTime      : " + loadedList[4].split(_constantVar(2))[1])
-            #     if findList[counter][0] == "Null":
-            #         print("\n_______End of List_______")
-        #         print(_menus(4.9))
-        #         uInp3 = _menuInput("searchFunctions")
-        #         if uInp3 == 1:
-        #             if findList[counter][0] == "Null":
-        #                 _loader(3)
-        #                 continue
-        #             else:
-        #                 counter = counter + 1
-        #                 _loader(3)
-        #                 continue
-        #         elif uInp3 == 2:
-        #             counter = counter - 1
-        #             _loader(3)
-        #             continue
-        #         elif uInp3 == 3:
-        #             _loader(3)
-        #             break
-        #         elif uInp3 == 4:
-        #             pgNum = 3
-        #             list1.append(pgNum)
-        #             _loader(3)
-        #             return list1
-        #         else:
-        #             print(_menus("badInput"))
-        #             _loader(3)
-        #             continue
-        #
-        #
-        #
-        #     except:
-        #         list2 = ["Null", "Null", "Null", "Null", "Null|Null"]
-        #         findList.append(list2)
-        #         continue
-        #
-        # continue
 
 
 
+
+
+def _bookingSearch():
+    pgNum = 0
+    list1 = []
+    recData = []
+    findList = []
+    loadedList = []
+    findCount = 0
+    counter = -1
+    pad = " "
+    recList = []
+    while 1 == 1:
+        counter = -1
+        findCount = 0
+        findList = []
+        loadedList = []
+        try:
+            _screenClr()
+            print(_menus(4.7))
+            uInp = _menuInput("bookingRecords_1")
+            _loader(3)
+            _screenClr()
+            if uInp == 1:
+                uInp2 = input("=- Search Booking Records -=\n\nPlease enter an alias:\n\n> ")
+            elif uInp == 2:
+                uInp2 = input("=- Search Booking Records -=\n\nPlease enter a car ID:\n\b> ")
+            elif uInp == 3:
+                pgNum = 3
+                _loader(3)
+                list1.append(pgNum)
+                return list1
+            else:
+                print(_menus("badInput"))
+                _loader(3)
+                continue
+
+            _loader(3)
+            with open(_fileSelect(6), "r") as openedFile:
+                for line in openedFile:
+                    recList = line.rstrip("\n").split(_constantVar(1))
+                    recList[1] = recList[1].split(_constantVar(2))
+                    recList[2] = recList[2].split(_constantVar(2))
+                    recData = recList
+                    if (uInp == 1 and recData[0] == uInp2) or (uInp == 2 and recData[1][0] == uInp2):
+                        findList.append(recData)
+                        findCount = findCount + 1
+
+                if findCount == 0:
+                    _screenClr()
+                    if uInp == 1:
+                        print("No records with alias of " + uInp2 + " found!")
+                    elif uInp == 2:
+                        print("No records with car ID of " + uInp2 + " found!")
+                    _sleep(0.5)
+                    _loader(3)
+                    pgNum = 3
+                    list1.append(pgNum)
+                    return list1
+
+        except:
+            print(_menus("badInput"))
+            _loader(3)
+            continue
+
+        while 1 == 1:
+            i = 0
+            loadedList = []
+            if counter < -1:
+                counter = -1
+            _screenClr()
+            print("=- Payment List -=\n\t    Alias                       Car ID              Model                       Days                Date                Time\n")
+            try:
+                while i < 5:
+                    loadedList = findList[(counter + 1)]
+                    print(str(i + 1) + "\t-\t" + (loadedList[0] + pad * (20 - len(loadedList[0]))) + "\t:\t" + (loadedList[1][0] + pad * (15 - len(loadedList[1][0]))) + "\t:\t" + (loadedList[1][1] + pad * (20 - len(loadedList[1][1]))) + "\t:\t" + (loadedList[3] + pad * (15 - len(loadedList[3]))) + "\t:\t" + (loadedList[2][0] + pad * (15 - len(loadedList[2][0]))) + "\t:\t" + (loadedList[2][1] + pad * (15 - len(loadedList[2][1]))))
+                    counter = counter + 1
+                    i = i + 1
+            except:
+                print("_______End of List_______")
+
+            try:
+                uInp3 = int(input(_menus(4.9)))
+                if uInp3 == 1:
+                    _loader(3)
+                    continue
+                elif uInp3 == 2:
+                    counter = counter - 10
+                    _loader(3)
+                    continue
+                elif uInp3 == 3:
+                    _loader(3)
+                    break
+                elif uInp3 == 4:
+                    pgNum = 3
+                    list1.append(pgNum)
+                    _loader(3)
+                    return list1
+                else:
+                    print(_menus("badInput"))
+                    counter = counter - 5
+                    _loader(3)
+                    continue
+
+            except:
+                print(_menus("badInput"))
+                counter = counter - 5
+                _loader(3)
+                continue
+        continue
+
+
+
+
+
+def _paySearch():
+    pgNum = 0
+    list1 = []
+    recData = []
+    findList = []
+    loadedList = []
+    findCount = 0
+    counter = -1
+    pad = " "
+    recList = []
+    while 1 == 1:
+        counter = -1
+        findCount = 0
+        findList = []
+        loadedList = []
+        try:
+            _screenClr()
+            print(_menus(4.8))
+            uInp = _menuInput("paymentRecords_1")
+            _loader(3)
+            _screenClr()
+            if uInp == 1:
+                uInp2 = input("=- Search Payment Records -=\n\nPlease enter an alias:\n\n> ")
+            elif uInp == 2:
+                uInp2 = input("=- Search Payment Records -=\n\nPlease enter a car ID:\n\b> ")
+            elif uInp == 3:
+                pgNum = 3
+                _loader(3)
+                list1.append(pgNum)
+                return list1
+            else:
+                print(_menus("badInput"))
+                _loader(3)
+                continue
+
+            _loader(3)
+            with open(_fileSelect(5), "r") as openedFile:
+                for line in openedFile:
+                    recData = line.rstrip("\n").split(_constantVar(1))
+                    if (uInp == 1 and recData[0] == uInp2) or (uInp == 2 and recData[2] == uInp2):
+                        findList.append(recData)
+                        findCount = findCount + 1
+
+                if findCount == 0:
+                    _screenClr()
+                    if uInp == 1:
+                        print("No records with alias of " + uInp2 + " found!")
+                    elif uInp == 2:
+                        print("No records with car ID of " + uInp2 + " found!")
+                    _sleep(0.5)
+                    _loader(3)
+                    pgNum = 3
+                    list1.append(pgNum)
+                    return list1
+
+        except:
+            print(_menus("badInput"))
+            _loader(3)
+            continue
+
+        while 1 == 1:
+            i = 0
+            loadedList = []
+            if counter < -1:
+                counter = -1
+            _screenClr()
+            print("=- Payment List -=\n\t\tAlias\t\t\t\t\t\tAmount\t\t\t\t\tCar ID\t\t\t\tDuration\t\t\tDate\t\t\t\tTime\n")
+            try:
+                while i < 5:
+                    loadedList = findList[(counter + 1)]
+                    print(str(i + 1) + "\t-\t" + (loadedList[0] + pad * (20 - len(loadedList[0]))) + "\t:\tRM " + (loadedList[1] + pad * (13 - len(loadedList[1]))) + "\t:\t" + (loadedList[2] + pad * (15 - len(loadedList[2]))) + "\t:\t" + (loadedList[3] + pad * (15 - len(loadedList[3]))) + "\t:\t" + (loadedList[4].split(_constantVar(2))[0] + pad * (15 - len(loadedList[4].split(_constantVar(2))[0]))) + "\t:\t" + (loadedList[4].split(_constantVar(2))[1] + pad * (15 - len(loadedList[4].split(_constantVar(2))[1]))))
+                    counter = counter + 1
+                    i = i + 1
+            except:
+                print("_______End of List_______")
+
+            try:
+                uInp3 = int(input(_menus(4.9)))
+                if uInp3 == 1:
+                    _loader(3)
+                    continue
+                elif uInp3 == 2:
+                    counter = counter - 10
+                    _loader(3)
+                    continue
+                elif uInp3 == 3:
+                    _loader(3)
+                    break
+                elif uInp3 == 4:
+                    pgNum = 3
+                    list1.append(pgNum)
+                    _loader(3)
+                    return list1
+                else:
+                    print(_menus("badInput"))
+                    counter = counter - 5
+                    _loader(3)
+                    continue
+
+            except:
+                print(_menus("badInput"))
+                counter = counter - 5
+                _loader(3)
+                continue
+        continue
 
 
 
@@ -1636,11 +1817,11 @@ def _adminBrowse(uAlias):
                 uInput2 = _menuInput("adminDash_3")
                 if uInput2 == 1:
                     _loader(3)
-                    list1 = []# function for searching bookings
+                    list1 = _bookingSearch()
                     break
                 elif uInput2 == 2:
                     _loader(3)
-                    list1 = []# function for searching payments
+                    list1 = _paySearch()
                     break
                 elif uInput2 == 3:
                     _loader(3)
@@ -1865,7 +2046,7 @@ def _pageRegistration():
             # Provide the user with feedback
             _screenClr()
             print(_menus(1.5))
-            pgNum = 3
+            pgNum = 4
             _sleep(0.5)
             _loader(5)
             list1.append(pgNum)
