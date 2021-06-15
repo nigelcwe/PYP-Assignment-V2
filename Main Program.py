@@ -109,7 +109,7 @@ def _menus(num):
         elif num == 6.0:
             menu = "\nOther options:\n6 - Next Page\n7 - Previous Page\n8 - Back\n\nPlease enter a corresponding value:\n> "
         elif num == 6.1:
-            menu = "=- Car List -=\n1 - Login\n2 - Register\n3 - Continue browsing\n"
+            menu = "=- Car List -=\nWhat would you like to do?\n1 - Login\n2 - Register\n3 - Continue browsing\n"
 
         # Admin Car Page Menus
         elif num == 7.0:
@@ -354,7 +354,7 @@ def _regSelect():
                                     counter = -1
                                     _loader(3)
                                     break
-                                elif uInp == 2:
+                                elif uInp2 == 2:
                                     _loader(3)
                                     pgNum = 3
                                     list1.append(pgNum)
@@ -816,10 +816,15 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
 
                 # Guest Mode
                 if uStatus == 0:
-                    guestInp = 0
+                    _loader(3)
                     _screenClr()
-                    print(_menus(6.1))
+                    print("Browsing as guest!")
+                    _sleep(0.5)
+                    _loader(3)
+                    guestInp = 0
                     while 1 == 1:
+                        _screenClr()
+                        print(_menus(6.1))
                         guestInp = _menuInput("guestCar")
                         if guestInp == 1:
                             pgNum = 2
