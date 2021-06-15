@@ -580,7 +580,6 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
     list1 = []
     uListNew = []
     carListNew = []
-    _screenClr()
     carData = []
     carDataTemp = []
     carDataNew = []
@@ -596,6 +595,8 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
     confirmation = 0
     dayNum = 0
     amtDue = 0
+
+    _screenClr()
 
     # Retrieving car data in a list
     with open(_fileSelect(4), "r") as openedFile:
