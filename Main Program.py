@@ -1768,8 +1768,7 @@ def _memberBrowse(uAlias):
         else:
             print(_menus("badInput"))
             _loader(3)
-            _screenClr()
-            print(_menus(3.1))
+            continue
 
 
 
@@ -1866,6 +1865,11 @@ def _adminBrowse(uAlias):
             _loader(3)
             list1 = _pageExit(2, uAlias, 0)
             return list1
+
+        else:
+            print(_menus("badInput"))
+            _loader(3)
+            continue
 
 
 
