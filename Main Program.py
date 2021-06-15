@@ -770,7 +770,7 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
         _screenClr()
         with open (_fileSelect(4), "r") as openedFile:
             fileList = openedFile.readlines()
-            print("=- Cars List -=\n\tModel                 Type             Status           Rate(per day)    ID\n")
+            print("=- Cars List -=\n\tModel                       Type                Status              Rate(per day)           ID\n")
             try:
                 while i < 5 :
                     carLine = fileList[(counter + 1)].rstrip("\n")
@@ -788,7 +788,7 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                     elif int(carData[3]) == 1:
                         carData[3] = "Unavailable"
 
-                    print(str(i + 1) + " - " + (carData[1] + pad * (20 - len(carData[1]))) + ": " + (carData[2] + pad * (15 - len(carData[2]))) + ": " + (carData[3] + pad * (15 - len(carData[3]))) + ": RM " + (carData[4] + pad * (13 - len(carData[4]))) + ": " + (carData[0] + pad * (15 - len(carData[0]))))
+                    print(str(i + 1) + " - " + (carData[1] + pad * (20 - len(carData[1]))) + "\t:\t" + (carData[2] + pad * (15 - len(carData[2]))) + "\t:\t" + (carData[3] + pad * (15 - len(carData[3]))) + "\t:\tRM " + (carData[4] + pad * (13 - len(carData[4]))) + "\t:\t" + (carData[0] + pad * (15 - len(carData[0]))))
                     counter = counter + 1
                     i = i + 1
             except:
@@ -1291,11 +1291,11 @@ def _paySearchDur():
             if counter < -1:
                 counter = -1
             _screenClr()
-            print("=- Payment List -=\n\tAlias                 Amount            Car ID           Duration         Date              Time\n")
+            print("=- Payment List -=\n\tAlias                       Amount                  Car ID              Duration            Date                Time\n")
             try:
                 while i < 5:
                     loadedList = findList[(counter + 1)]
-                    print(str(i + 1) + " - " + (loadedList[0] + pad * (20 - len(loadedList[0]))) + ": RM " + (loadedList[1] + pad * (13 - len(loadedList[1]))) + ": " + (loadedList[2] + pad * (15 - len(loadedList[2]))) + ": " + (loadedList[3] + pad * (15 - len(loadedList[3]))) + ": " + (loadedList[4].split(_constantVar(2))[0] + pad * (15 - len(loadedList[4].split(_constantVar(2))[0]))) + " : " + (loadedList[4].split(_constantVar(2))[1] + pad * (15 - len(loadedList[4].split(_constantVar(2))[1]))))
+                    print(str(i + 1) + " - " + (loadedList[0] + pad * (20 - len(loadedList[0]))) + "\t:\tRM " + (loadedList[1] + pad * (13 - len(loadedList[1]))) + "\t:\t" + (loadedList[2] + pad * (15 - len(loadedList[2]))) + "\t:\t" + (loadedList[3] + pad * (15 - len(loadedList[3]))) + "\t:\t" + (loadedList[4].split(_constantVar(2))[0] + pad * (15 - len(loadedList[4].split(_constantVar(2))[0]))) + "\t:\t" + (loadedList[4].split(_constantVar(2))[1] + pad * (15 - len(loadedList[4].split(_constantVar(2))[1]))))
                     counter = counter + 1
                     i = i + 1
             except:
@@ -1404,11 +1404,11 @@ def _bookingSearch():
             if counter < -1:
                 counter = -1
             _screenClr()
-            print("=- Payment List -=\n\t    Alias                       Car ID              Model                       Days                Date                Time\n")
+            print("=- Payment List -=\n\tAlias                       Car ID              Model                       Days                Date                Time\n")
             try:
                 while i < 5:
                     loadedList = findList[(counter + 1)]
-                    print(str(i + 1) + "\t-\t" + (loadedList[0] + pad * (20 - len(loadedList[0]))) + "\t:\t" + (loadedList[1][0] + pad * (15 - len(loadedList[1][0]))) + "\t:\t" + (loadedList[1][1] + pad * (20 - len(loadedList[1][1]))) + "\t:\t" + (loadedList[3] + pad * (15 - len(loadedList[3]))) + "\t:\t" + (loadedList[2][0] + pad * (15 - len(loadedList[2][0]))) + "\t:\t" + (loadedList[2][1] + pad * (15 - len(loadedList[2][1]))))
+                    print(str(i + 1) + " - " + (loadedList[0] + pad * (20 - len(loadedList[0]))) + "\t:\t" + (loadedList[1][0] + pad * (15 - len(loadedList[1][0]))) + "\t:\t" + (loadedList[1][1] + pad * (20 - len(loadedList[1][1]))) + "\t:\t" + (loadedList[3] + pad * (15 - len(loadedList[3]))) + "\t:\t" + (loadedList[2][0] + pad * (15 - len(loadedList[2][0]))) + "\t:\t" + (loadedList[2][1] + pad * (15 - len(loadedList[2][1]))))
                     counter = counter + 1
                     i = i + 1
             except:
@@ -1514,11 +1514,11 @@ def _paySearch():
             if counter < -1:
                 counter = -1
             _screenClr()
-            print("=- Payment List -=\n\t\tAlias\t\t\t\t\t\tAmount\t\t\t\t\tCar ID\t\t\t\tDuration\t\t\tDate\t\t\t\tTime\n")
+            print("=- Payment List -=\n\tAlias\t\t\t\t\t\tAmount\t\t\t\t\tCar ID\t\t\t\tDuration\t\t\tDate\t\t\t\tTime\n")
             try:
                 while i < 5:
                     loadedList = findList[(counter + 1)]
-                    print(str(i + 1) + "\t-\t" + (loadedList[0] + pad * (20 - len(loadedList[0]))) + "\t:\tRM " + (loadedList[1] + pad * (13 - len(loadedList[1]))) + "\t:\t" + (loadedList[2] + pad * (15 - len(loadedList[2]))) + "\t:\t" + (loadedList[3] + pad * (15 - len(loadedList[3]))) + "\t:\t" + (loadedList[4].split(_constantVar(2))[0] + pad * (15 - len(loadedList[4].split(_constantVar(2))[0]))) + "\t:\t" + (loadedList[4].split(_constantVar(2))[1] + pad * (15 - len(loadedList[4].split(_constantVar(2))[1]))))
+                    print(str(i + 1) + " - " + (loadedList[0] + pad * (20 - len(loadedList[0]))) + "\t:\tRM " + (loadedList[1] + pad * (13 - len(loadedList[1]))) + "\t:\t" + (loadedList[2] + pad * (15 - len(loadedList[2]))) + "\t:\t" + (loadedList[3] + pad * (15 - len(loadedList[3]))) + "\t:\t" + (loadedList[4].split(_constantVar(2))[0] + pad * (15 - len(loadedList[4].split(_constantVar(2))[0]))) + "\t:\t" + (loadedList[4].split(_constantVar(2))[1] + pad * (15 - len(loadedList[4].split(_constantVar(2))[1]))))
                     counter = counter + 1
                     i = i + 1
             except:
