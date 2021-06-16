@@ -1133,14 +1133,14 @@ def _carAdd():
 
             # Checking for proper syntax of car ID
             if inval == 0 and carData[0].startswith("CA") == False:
-                print("Invalid car ID detected! Please try agaain.")
+                print("Invalid car ID detected! Please try again.")
                 inval = 1
 
             if inval == 0:
                 try:
                     IDNum = int(carData[0][2::])
                 except:
-                    print("Invalid car ID detected! Please try agin.")
+                    print("Invalid car ID detected! Please try again.")
                     inval = 1
 
             # Checking length of car ID
