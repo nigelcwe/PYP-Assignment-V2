@@ -897,6 +897,10 @@ def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View 
                                 pgNum = 3
                                 list1.append(pgNum)
                                 return list1
+                            else:
+                                print(_menus("badInput"))
+                                _loader(3)
+                                continue
 
                         if memInp == 1:
                             continue
