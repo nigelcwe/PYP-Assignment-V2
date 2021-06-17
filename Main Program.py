@@ -2244,7 +2244,7 @@ while 1 == 1:
     elif pgNo == -1:
         break
 
-    break
+    continue
 
 
 
