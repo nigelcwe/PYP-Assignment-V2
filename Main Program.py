@@ -2146,8 +2146,6 @@ def _pageExit(uStatus, uAlias, logout):
             else:
                 print(_menus("badInput"))
                 _loader(3)
-                _screenClr()
-                print(_menus(5))
 
     # Executing user's selected option
     if userExit == 1:
