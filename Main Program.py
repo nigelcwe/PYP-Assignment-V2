@@ -121,6 +121,8 @@ def _menus(num):
             menu = "=- Car Return -=\nPlease select an option:\n1 - Try again\n2 - Return another car\n3 - Back to Admin Dashboard\n"
         elif num == 7.5:
             menu = "=- Edit Car Details -=\nPlease select an option:\n1 - Choose another car to edit\n2 - Back to Admin Dashboard\n"
+        elif num == 7.6:
+            menu = "Options:\n1 - Yes\n2 - No\n\nPlease enter a corresponding value:\n> "
 
         # Member Car Page Menus
         elif num == 8.0:
@@ -337,7 +339,7 @@ def _regSelect():
                                     openedFile.write(uLine + "\n")
 
                             # Appending user data into member file
-                            _newRec(_fileSelect(1), uData)
+                            _newRec(_fileSelect(1), uDataTemp)
 
                             _loader(3)
                             _screenClr()
@@ -755,7 +757,7 @@ def _carBooking(uAlias, carID):         # Output: 1 = Successfully booked, 2 = P
 
 
 
-def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View cars available for rental, 1 = Modify, 2 = Return)
+def _carSelect(uStatus, uAlias = "", mode = 0):        # mode: Admin  (0 = View all cars, 1 = Modify, 2 = Return)
     carLine = ""                                       #       Member (0 = Select car to book [only shows available cars])
     carData = []
     counter = -1
@@ -1109,7 +1111,7 @@ def _carAdd():
             try:
 
                 # Receiving input (confirmation of details to be added)
-                confirmation = input(_menus(4.1))
+                confirmation = input(_menus(7.6))
                 confirmation = int(confirmation)
                 if confirmation == 1 or confirmation == 2:
                     _loader(3)
@@ -1126,6 +1128,7 @@ def _carAdd():
         if confirmation == 2:
             continue
         else:
+            _screenClr()
             inval = 0
 
             # Checking for proper syntax of car ID
