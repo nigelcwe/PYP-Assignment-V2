@@ -2018,8 +2018,6 @@ def _pageRegistration():
             else:
                 print(_menus("badInput"))
                 _loader(3)
-                _screenClr()
-                print(_menus(1.2))
 
         # Prompting users to create a password
         if aliasConfirm == 1:
