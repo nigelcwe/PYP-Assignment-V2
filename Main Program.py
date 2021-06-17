@@ -1841,8 +1841,8 @@ def _adminBrowse(uAlias):
                     _loader(3)
                     break
                 else:
-                    _loader(3)
                     print(_menus("badInput"))
+                    _loader(3)
                     continue
             continue
 
