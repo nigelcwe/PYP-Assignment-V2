@@ -1,9 +1,6 @@
 #NIGEL CHAN WEI EN
 #TP059179
 
-# Modules
-from datetime import *
-
 
 # Functions
 def _screenClr():
@@ -2186,6 +2183,7 @@ def _pageExit(uStatus, uAlias, logout):
 
 
 # Main Program
+from datetime import *
 outputList = []
 pgNo = 0
 userStatus = 0 # 0 - Guest, 1 - Member, 2 - Admin
