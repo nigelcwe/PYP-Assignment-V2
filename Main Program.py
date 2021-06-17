@@ -2006,10 +2006,6 @@ def _pageRegistration():
             if aliasValidation == 1:
                 continue
 
-        if alias == 1 or alias == 2:
-            list1.append(pgNum)
-            return list1
-
         # Asking users to confirm their alias
         _loader(3)
         while 1 == 1:
