@@ -1,4 +1,4 @@
-CA0001#Honda Accord#Sedan#1#350
+CA0001#Honda Accord#Sedan#0#350
 CA0002#Perodua Myvi#Compact#0#200
 CA0003#Volkswagen Passat#Sedan#0#500
 CA0004#Honda Accord#Sedan#0#350
@@ -6,8 +6,10 @@ CA0005#BMW 5Series#Sedan#1#500
 CA0006#Toyota Vios#Sedan#0#350
 CA0007#Proton Persona#Sedan#0#300
 CA0008#Honda City#Sedan#0#350
-CA0009#Suzuki Swift#Compact#0#200
+CA0009#Suzuki Swift#Compact#1#200
 CA0010#Nissan Almera#Sedan#0#350
 CA0011#Hyundai Elantra#Sedan#0#350
 CA0012#Honda CR-V#SUV#0#500
 CA0013#Honda Jazz#Compact#0#200
+CA0014#Volkswagen Jetta#Sedan#0#500
+CA0015#Proton x70#SUV#0#400

@@ -1167,7 +1167,6 @@ def _carAdd():
 
     # Writing car data into car file
     _newRec(_fileSelect(4), carData)
-    _loader(3)
     _screenClr()
     print("Car has been successfully added!\nNow redirecting back to Admin Dashboard.")
     _sleep(0.5)
