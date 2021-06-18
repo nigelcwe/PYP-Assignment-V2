@@ -122,7 +122,7 @@ def _menus(num):
         elif num == 7.5:
             menu = "=- Edit Car Details -=\nPlease select an option:\n1 - Choose another car to edit\n2 - Back to Admin Dashboard\n"
         elif num == 7.6:
-            menu = "Options:\n1 - Yes\n2 - No\n\nPlease enter a corresponding value:\n> "
+            menu = "Confirm details?\n1 - Yes\n2 - No\n\nPlease enter a corresponding value:\n> "
 
         # Member Car Page Menus
         elif num == 8.0:
@@ -1374,10 +1374,9 @@ def _bookingSearch():
             if uInp == 1:
                 uInp2 = input("=- Search Booking Records -=\n\nPlease enter an alias:\n\n> ")
             elif uInp == 2:
-                uInp2 = input("=- Search Booking Records -=\n\nPlease enter a car ID:\n\b> ")
+                uInp2 = input("=- Search Booking Records -=\n\nPlease enter a car ID:\n\n> ")
             elif uInp == 3:
                 pgNum = 3
-                _loader(3)
                 list1.append(pgNum)
                 return list1
             else:
@@ -1487,10 +1486,9 @@ def _paySearch():
             if uInp == 1:
                 uInp2 = input("=- Search Payment Records -=\n\nPlease enter an alias:\n\n> ")
             elif uInp == 2:
-                uInp2 = input("=- Search Payment Records -=\n\nPlease enter a car ID:\n\b> ")
+                uInp2 = input("=- Search Payment Records -=\n\nPlease enter a car ID:\n\n> ")
             elif uInp == 3:
                 pgNum = 3
-                _loader(3)
                 list1.append(pgNum)
                 return list1
             else:
