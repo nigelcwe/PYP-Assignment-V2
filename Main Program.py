@@ -64,7 +64,7 @@ def _menus(num):
         elif num == 2.3:
             menu = "Successfully logged in!\nNow redirecting to main browsing page."
         elif num == 2.4:
-            menu = "=- Login -=\nLogin as:\n1 - User\n2 - Admin\n\nMore options:\n3 - Back\n"
+            menu = "=- Login -=\nLogin as:\n1 - Member\n2 - Admin\n\nMore options:\n3 - Back\n"
 
         # Member Dashboard Menus (member browsing page)
         elif num == 3.0:
