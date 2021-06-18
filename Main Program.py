@@ -1630,6 +1630,10 @@ def _login(userType):
                 _loader(3)
                 pgNum = 5
                 break
+            else:
+                print(_menus("badInput"))
+                _loader(3)
+                continue
 
         # Assume that an alias was entered
         except:
